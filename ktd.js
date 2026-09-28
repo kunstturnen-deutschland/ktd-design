@@ -1,6 +1,6 @@
 /* =====================================================================
    Kunstturnen Deutschland · zentrale Skripte
-   Datei: ktd.js · Version 0.2.0 · Stand 28.09.2026
+   Datei: ktd.js · Version 0.2.1 · Stand 28.09.2026
    Enthält: Karten umdrehen, Einblenden, Karten-Stapel mit Abdunkeln, Quiz.
    Alles greift nur auf Elemente mit ktd-Klassen zu.
    ===================================================================== */
@@ -42,7 +42,7 @@
     var sek=[].slice.call(box.children),MAXD=.42,tick=false;
     function hoehen(){
       var vh=window.innerHeight;
-      sek.forEach(function(s){s.style.top=Math.min(oben,vh-s.offsetHeight)+"px"});
+      sek.forEach(function(s,i){s.style.top=i===sek.length-1?"":Math.min(oben,vh-s.offsetHeight)+"px"});
     }
     function dunkeln(){
       tick=false;var span=window.innerHeight-oben;
@@ -108,5 +108,5 @@
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
 
   /* Für nachgeladene Inhalte, z. B. Register mit neuen Karten */
-  window.ktd={einblenden:einblenden,version:"0.2.0"};
+  window.ktd={einblenden:einblenden,version:"0.2.1"};
 })();

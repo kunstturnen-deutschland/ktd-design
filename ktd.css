@@ -1,6 +1,6 @@
 /* =====================================================================
    Kunstturnen Deutschland · zentrale Gestaltung
-   Datei: ktd.css · Version 0.2.0 · Stand 28.09.2026
+   Datei: ktd.css · Version 0.2.1 · Stand 28.09.2026
    Grundsatz: Diese Datei setzt KEINE globalen Stile (kein body, kein h1).
    Alles wirkt nur über Klassen mit dem Präfix "ktd-". Wird sie in den
    Site-Kopf eingebunden, verändert sich an bestehenden Seiten nichts.
@@ -119,7 +119,9 @@ a.ktd-bento:hover{border-color:var(--ktd-pink)}
 .ktd-stapel>*{position:sticky;top:0}
 .ktd-stapel>*:not(:first-child){border-radius:var(--ktd-r-stapel) var(--ktd-r-stapel) 0 0}
 .ktd-stapel>*::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#12002B;opacity:var(--ktd-dunkel,0);pointer-events:none;z-index:4}
-.ktd-stapel>*:last-child{position:relative}
+.ktd-stapel>*:last-child{position:relative;top:auto}
+/* Alles nach dem Stapel (z. B. der Footer) liegt über den gestapelten Karten und hängt an der letzten Sektion */
+.ktd-stapel~*{position:relative;z-index:5}
 
 
 /* ---------- 13  Quiz (übernommen vom bewährten Porträt-Quiz) ----------
