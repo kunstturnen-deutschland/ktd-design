@@ -6,6 +6,7 @@ Zentrale Gestaltung und Bausteine von Kunstturnen Deutschland.
 
 - `ktd.css` – Tokens (Farben, Schriften, Größen) und Bausteine: Sektionen, Überschriften, Knöpfe, Pillen, Bentos, Bilder mit Bildunterschrift, Turnerinnen-Karten, Sticker, Karten-Stapel
 - `ktd.js` – Karten umdrehen, Einblenden wie auf der Landingpage, Karten-Stapel mit Abdunkeln
+- `seiten/wettkaempfe.css` und `seiten/wettkaempfe.js` – Stil und Verhalten der Seite Wettkämpfe (Zeitleiste, WM-Block, Favoritinnen-Register, Kalender). Die Daten stehen als JSON-Blöcke auf der Seite.
 
 ## Einbindung in Webflow (Site-Kopf)
 
