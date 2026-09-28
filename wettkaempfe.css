@@ -1,4 +1,4 @@
-/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.css · Version 0.1.0 · Stand 28.09.2026
+/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.css · Version 0.1.1 · Stand 28.09.2026
    Alle Regeln gelten nur innerhalb von .wk. Tokens kommen aus ktd.css. */
 .wk{--vio:var(--ktd-vio);--tief:var(--ktd-tief);--gruen:var(--ktd-gruen);--pink:var(--ktd-pink);--gelb:var(--ktd-gelb);--gold:var(--ktd-gold);--papier:var(--ktd-papier);--weiss:#fff;--text:var(--ktd-text);--ged:var(--ktd-ged);--kachel:var(--ktd-kachel);--rand:var(--ktd-rand);--rand-hell:var(--ktd-rand-hell);--h:var(--ktd-h);--b:var(--ktd-b);--pad:clamp(18px,4vw,32px);--r:14px;--max:1240px;font-family:var(--b);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:clamp(.92rem,1.8vw,1.05rem);color:var(--text)}
 .wk *,.wk *::before,.wk *::after{box-sizing:border-box}
@@ -63,9 +63,9 @@
 .wk .t--titel h2{font-size:clamp(1.7rem,3vw,2.55rem);color:#fff;line-height:.95}
 .wk .t--titel h2 span{display:block;color:var(--gold)}
 .wk .t--titel p{margin:.7em 0 0;color:var(--ged);font-weight:500}
-.wk .t--zaehler{grid-column:8/10;grid-row:2;background:var(--tief);color:var(--text);display:flex;flex-direction:column;justify-content:center}
+.wk .t--zaehler{grid-column:8/10;grid-row:2;background:var(--gelb);color:var(--vio);display:flex;flex-direction:column;justify-content:center}
 .wk .t--zaehler small{font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
-.wk .t--zaehler b{font-family:var(--h);font-weight:400;font-size:clamp(3.4rem,7vw,5.6rem);line-height:.85;color:var(--gelb)}
+.wk .t--zaehler b{font-family:var(--h);font-weight:400;font-size:clamp(3.4rem,7vw,5.6rem);line-height:.85;color:var(--vio)}
 .wk .t--quali{grid-column:10/13;grid-row:2;background:var(--weiss);color:var(--vio);display:flex;flex-direction:column;justify-content:center}
 .wk .t--quali small{font-weight:700;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;line-height:1.35}
 .wk .t--quali b{font-family:var(--h);font-weight:400;font-size:clamp(1.5rem,2.8vw,2.2rem);line-height:1;text-transform:uppercase;margin-top:.3em}
@@ -248,3 +248,10 @@
 .wk .fussz .w{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px}
 .wk .fussz a{text-decoration:none}
 @media (prefers-reduced-motion:reduce){.wk .karte__in,.wk .register{transition:none}}
+/* 0.1.1: Überschrift der WM-Sektion über dem Mosaik, Datums-Kachel an ihrer Stelle */
+.wk .wm-kopf{margin:0 0 clamp(22px,3vw,34px)}
+.wk .wm-kopf h2{color:var(--vio);font-size:clamp(2.4rem,7vw,5rem);line-height:.95}
+.wk .t--datum{grid-column:8/13;grid-row:1;background:var(--vio);display:flex;flex-direction:column;justify-content:flex-end}
+.wk .t--datum b{font-family:var(--h);font-weight:400;text-transform:uppercase;color:var(--gold);font-size:clamp(2rem,4vw,3.2rem);line-height:.95}
+.wk .t--datum p{margin:.6em 0 0;color:var(--ged);font-weight:500}
+@media(max-width:900px){.wk .t--datum{grid-column:1/7;grid-row:auto}}
