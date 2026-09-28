@@ -1,4 +1,4 @@
-/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.css · Version 0.1.3 · Stand 28.09.2026
+/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.css · Version 0.2.0 · Stand 28.09.2026
    Alle Regeln gelten nur innerhalb von .wk. Tokens kommen aus ktd.css. */
 .wk{--vio:var(--ktd-vio);--tief:var(--ktd-tief);--gruen:var(--ktd-gruen);--pink:var(--ktd-pink);--gelb:var(--ktd-gelb);--gold:var(--ktd-gold);--papier:var(--ktd-papier);--weiss:#fff;--text:var(--ktd-text);--ged:var(--ktd-ged);--kachel:var(--ktd-kachel);--rand:var(--ktd-rand);--rand-hell:var(--ktd-rand-hell);--h:var(--ktd-h);--b:var(--ktd-b);--pad:clamp(18px,4vw,32px);--r:14px;--max:1240px;font-family:var(--b);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:clamp(.92rem,1.8vw,1.05rem);color:var(--text)}
 .wk *,.wk *::before,.wk *::after{box-sizing:border-box}
@@ -261,3 +261,25 @@
 .wk .zeile__typ .pille:not(.pille--gold){color:var(--vio);border-color:var(--rand-hell)}
 .wk .zeile__uhr{display:flex;justify-content:flex-start}
 @media(max-width:640px){.wk .zeile{grid-template-columns:auto 1fr 16px}.wk .zeile__datum,.wk .zeile__name{grid-column:1/3!important}.wk .zeile__uhr{grid-column:1!important;grid-row:3;justify-content:flex-start}.wk .zeile__typ{grid-column:2!important;grid-row:3;justify-content:flex-start}.wk .zeile__pfeil{grid-column:3!important;grid-row:1/4}}
+
+/* 0.2.0: deutsche Karten im Design der Startseite, auf Grün */
+.wk .team-karten{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;padding-bottom:0}
+@media(min-width:640px){.wk .team-karten{grid-template-columns:repeat(3,1fr);gap:18px}}
+@media(min-width:960px){.wk .team-karten{grid-template-columns:repeat(5,1fr)}}
+.wk .team-intro{margin:-10px 0 26px;max-width:62ch;font-weight:500;color:var(--vio)}
+.wk .hs-k{display:block;border-radius:14px;overflow:hidden;background:var(--gruen);border:1px solid rgba(45,0,96,.18);outline:2px solid transparent;text-decoration:none;color:var(--vio);opacity:0;transform:translateY(34px);transition:opacity 1.05s cubic-bezier(.22,.61,.36,1),transform 1.05s cubic-bezier(.22,.61,.36,1),outline-color .2s}
+.wk .hs-k.in{opacity:1;transform:none}.wk .hs-k:hover{outline-color:var(--vio)}
+.wk .hs-kb{display:block;position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--tief)}.wk .hs-kb img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.wk .hs-wm{position:absolute;left:8px;top:8px;background:var(--gold);color:var(--vio);font-size:.62rem;font-weight:700;letter-spacing:.04em;padding:4px 8px;border-radius:999px}
+.wk .hs-pf{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;display:grid;place-content:center;font-size:1.15rem;line-height:1;transition:transform .2s}.wk .hs-k:hover .hs-pf{transform:translateX(3px)}
+.wk .hs-kn{display:block;padding:10px 10px 0;font-family:var(--h);text-transform:uppercase;line-height:1}
+.wk .hs-vn{display:block;font-size:clamp(.95rem,2.6vw,1.15rem);color:var(--vio);margin-bottom:4px}
+.wk .hs-nn{display:inline-block;white-space:nowrap;font-size:clamp(1.15rem,3.4vw,1.55rem);padding:2px 8px 3px;border-radius:6px;color:#fff;background:var(--pink)}
+.wk .hs-sig{display:block;padding:10px 10px 0;font-size:clamp(.82rem,1.8vw,.9rem);line-height:1.35;color:var(--vio);min-height:2.7em}
+.wk .hs-cl{display:block;padding:6px 10px 12px;font-size:.76rem;color:rgba(45,0,96,.72)}
+/* 0.2.0: Einblendung der Überschrift wie auf der Startseite */
+@keyframes wk-auf{from{opacity:0;transform:translateY(.42em);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+@keyframes wk-unter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.wk .intro h1{animation:wk-auf 1.05s cubic-bezier(.16,1,.3,1) .15s both}
+.wk .intro h1 span{animation:wk-unter .8s cubic-bezier(.16,1,.3,1) 1.4s both}
+@media(prefers-reduced-motion:reduce){.wk .hs-k{opacity:1;transform:none;transition:outline-color .2s}.wk .intro h1,.wk .intro h1 span{animation:none}}

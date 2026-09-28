@@ -1,4 +1,4 @@
-/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.1.3 · Stand 28.09.2026
+/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.2.0 · Stand 28.09.2026
    Daten kommen aus JSON-Blöcken der Seite (#wk-daten-termine, #wk-daten-team, #wk-daten-fav-1/2). */
 
 (function(){
@@ -126,40 +126,21 @@
   if(w>0)document.getElementById("wm-tage").textContent=w;
   else if(tage("2026-10-25")>=0)Z.innerHTML="<small>Die Weltmeisterschaft</small><b>läuft</b>";
 
-  /* ===== Karten ===== */
-  function alter(g){var b=d(g),a=heute.getFullYear()-b.getFullYear();if(heute.getMonth()<b.getMonth()||(heute.getMonth()===b.getMonth()&&heute.getDate()<b.getDate()))a--;return a}
-  function flipper(root){root.querySelectorAll(".karte").forEach(function(b){b.addEventListener("click",function(){b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true")})})}
+  /* ===== Karten der deutschen Turnerinnen (Design wie auf der Startseite) ===== */
   var K=JSON.parse((document.getElementById("wk-daten-team")||{}).textContent||"null")||[];
-
-  var G=["Sprung","Barren","Balken","Boden","Mehrkampf"],kh="";
-  K.forEach(function(k){
-    var r="<span class='kopf'></span><span class='kopf'>Bestnote</span><span class='kopf'>Zuletzt</span>";
-    k[7].forEach(function(v,i){if(i===4)r+="<span class='aa'></span>";r+="<span class='g'>"+G[i]+"</span>"+(v?"<span class='best'>"+z(v[0])+"</span><span class='zul'>"+z(v[1])+"</span>":"<span class='leer'>–</span><span class='leer'>–</span>")});
-    kh+="<button class='karte' aria-pressed='false' aria-label='"+k[0]+" "+k[1]+": Wertungen anzeigen'><span class='karte__in'>"+
-      "<span class='karte__vorn'><img src='"+k[5]+"' loading='lazy' alt='' style='object-position:"+k[6]+"'><span class='pille'>"+k[4]+"</span>"+
-      "<span class='karte__fuss'><b>"+k[0]+"<br>"+k[1]+"</b><span>"+alter(k[2])+" · "+k[3]+"</span></span></span>"+
-      "<span class='karte__hinten'><b class='n'>"+k[0]+"<br>"+k[1]+"</b><span class='werte'>"+r+"</span><span class='karte__link'>Zum Porträt</span></span></span></button>";
-  });
-  var KA=document.getElementById("karten");KA.innerHTML=kh;flipper(KA);beobachte(KA);
-
-  /* ===== Register Favoritinnen ===== */
-  var REG=Object.assign({},JSON.parse((document.getElementById("wk-daten-fav-1")||{}).textContent||"null"),JSON.parse((document.getElementById("wk-daten-fav-2")||{}).textContent||"null"));
-  var GN={AA:"Mehrkampf",VT:"Sprung",UB:"Stufenbarren",BB:"Schwebebalken",FX:"Boden"};
-  var FK=document.getElementById("fav-karten");
-  function register(g){var h="";
-    REG[g].slice().sort(function(x,y){return x.n.localeCompare(y.n,'de')}).forEach(function(f,i){
-      var zl="";f.r.forEach(function(x){zl+="<div><span>"+x[1]+"</span><em>"+z(x[0])+"</em></div>"});
-      h+="<button class='karte' aria-pressed='false' aria-label='"+f.v+" "+f.n+": Wertungen anzeigen'><span class='karte__in'>"+
-        "<span class='karte__vorn'><img src='"+f.img+"' loading='lazy' alt='' style='object-position:50% 22%'>"+
-        "<span class='karte__fuss'><b>"+f.v+"<br>"+f.n+"</b><span>"+f.land+"</span></span></span>"+
-        "<span class='karte__hinten'><b class='n'>"+f.v+"<br>"+f.n+"</b><span class='bestwert'><small>Bestnote "+GN[g]+"</small><em>"+z(f.b)+"</em><span>"+f.bw+"</span></span>"+
-        "<span class='zuletzt'>"+zl+"</span></span></span></button>"});
-    FK.innerHTML=h;flipper(FK);beobachte(FK)}
-  register("AA");
-  document.querySelectorAll(".reg-tabs button").forEach(function(b){b.addEventListener("click",function(){
-    document.querySelectorAll(".reg-tabs button").forEach(function(x){x.setAttribute("aria-selected",x===b)});register(b.dataset.g)})});
-  var FB=document.getElementById("fav-knopf"),RG=document.getElementById("register");
-  FB.addEventListener("click",function(){var o=FB.getAttribute("aria-expanded")!=="true";FB.setAttribute("aria-expanded",o);RG.classList.toggle("offen",o)});
+  var KA=document.getElementById("karten");
+  if(KA){
+    var esc=function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")};
+    KA.innerHTML=K.map(function(t){var href=t.u?"/turnerin/"+t.u:"/stars";
+      return "<a class='hs-k' href='"+href+"'><span class='hs-kb'>"+(t.i?"<img src='"+esc(t.i)+"' alt='"+esc(t.v+" "+t.n)+"' loading='lazy'>":"")+
+        (t.w?"<span class='hs-wm'>Gemeldet für Rotterdam</span>":"")+(t.u?"<span class='hs-pf' aria-hidden='true'>→</span>":"")+"</span>"+
+        "<span class='hs-kn'><span class='hs-vn'>"+esc(t.v)+"</span><span class='hs-nn'>"+esc(t.n)+"</span></span>"+
+        "<span class='hs-sig'>"+esc(t.s)+"</span>"+(t.c?"<span class='hs-cl'>"+esc(t.c)+"</span>":"")+"</a>"}).join("");
+    var passen=function(){KA.querySelectorAll(".hs-nn").forEach(function(n){n.style.fontSize="";var max=n.parentNode.clientWidth,fs=parseFloat(getComputedStyle(n).fontSize);while(n.scrollWidth>max&&fs>11){fs-=1;n.style.fontSize=fs+"px"}})};
+    passen();var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(passen,150)});if(document.fonts&&document.fonts.ready)document.fonts.ready.then(passen);
+    var kio=("IntersectionObserver" in window)?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var k=e.target,i=[].slice.call(k.parentNode.children).indexOf(k);k.style.transitionDelay=((i%5)*110)+"ms";k.classList.add("in");kio.unobserve(k)}})},{rootMargin:"0px 0px -8% 0px",threshold:.15}):null;
+    KA.querySelectorAll(".hs-k").forEach(function(k){if(kio)kio.observe(k);else k.classList.add("in")});
+  }
 
   /* ===== Kalender ===== */
   var T=JSON.parse((document.getElementById("wk-daten-termine")||{}).textContent||"null")||[];
