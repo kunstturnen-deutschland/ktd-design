@@ -1,4 +1,4 @@
-/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.1.0 · Stand 28.09.2026
+/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.1.1 · Stand 28.09.2026
    Daten kommen aus JSON-Blöcken der Seite (#wk-daten-termine, #wk-daten-team, #wk-daten-fav-1/2). */
 
 (function(){
@@ -176,10 +176,9 @@
     zz.forEach(function(e){var x=d(e[0]),m=MO[x.getMonth()]+" "+x.getFullYear();
       if(m!==mon){if(mon)h+="</div></div>";h+="<div class='monat'><h3>"+m+"</h3><div class='zeilen'>";mon=m}
       var t=tage(e[0]),v=d(e[1])<heute,p="";
-      if(t<=0&&!v)p+="<span class='pille pille--gelb'>Läuft gerade</span>";
-      else if(!v&&t<=30)p+="<span class='pille pille--gelb'>In "+t+(t===1?" Tag":" Tagen")+"</span>";
-      p+="<span class='pille"+(e[6]?" pille--gold":"")+"'>"+e[5]+"</span>";
-      var tg=e[7]?"a":"div";h+="<"+tg+(e[7]?" href='"+e[7]+"'":"")+" class='zeile"+(v?" zeile--vorbei":"")+"'><span class='zeile__datum'>"+spanne(e[0],e[1])+"</span><span class='zeile__name'>"+e[2]+"<span class='zeile__ort'>"+e[3]+"</span></span><span class='zeile__pillen'>"+p+"</span><span class='zeile__pfeil' aria-hidden='true'>"+(e[7]?"›":"")+"</span></"+tg+">"});
+      var uhr=v?"":(t<=0?"<span class='pille pille--gelb'>Läuft gerade</span>":"<span class='pille pille--gelb'>In "+t+(t===1?" Tag":" Tagen")+"</span>");
+      p="<span class='pille"+(e[6]?" pille--gold":"")+"'>"+e[5]+"</span>";
+      var tg=e[7]?"a":"div";h+="<"+tg+(e[7]?" href='"+e[7]+"'":"")+" class='zeile"+(v?" zeile--vorbei":"")+"'><span class='zeile__datum'>"+spanne(e[0],e[1])+"</span><span class='zeile__name'>"+e[2]+"<span class='zeile__ort'>"+e[3]+"</span></span><span class='zeile__typ'>"+p+"</span><span class='zeile__uhr'>"+uhr+"</span><span class='zeile__pfeil' aria-hidden='true'>"+(e[7]?"›":"")+"</span></"+tg+">"});
     LI.innerHTML=h+"</div></div>";
   }
   document.querySelectorAll(".tabs button").forEach(function(b){b.addEventListener("click",function(){
