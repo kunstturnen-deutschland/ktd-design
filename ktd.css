@@ -1,0 +1,129 @@
+/* =====================================================================
+   Kunstturnen Deutschland · zentrale Gestaltung
+   Datei: ktd.css · Version 0.1.0 · Stand 28.09.2026
+   Grundsatz: Diese Datei setzt KEINE globalen Stile (kein body, kein h1).
+   Alles wirkt nur über Klassen mit dem Präfix "ktd-". Wird sie in den
+   Site-Kopf eingebunden, verändert sich an bestehenden Seiten nichts.
+   ===================================================================== */
+
+/* ---------- 1  Tokens ---------- */
+:root{
+  --ktd-vio:#2D0060;          /* Fläche und Schrift */
+  --ktd-tief:#1C0040;         /* Tiefe */
+  --ktd-gruen:#76F637;        /* Signalgrün */
+  --ktd-pink:#E040AA;         /* Pink */
+  --ktd-gelb:#DCFF00;         /* nur Status: Runterzählen, Läuft gerade */
+  --ktd-gold:#E3B341;         /* Top-Events und Medaillen */
+  --ktd-papier:#F4F1EC;
+  --ktd-weiss:#FFFFFF;
+  --ktd-text:#E7DEF6;         /* heller Text auf Violett */
+  --ktd-ged:#B79FD8;          /* gedämpfter Text auf Violett */
+  --ktd-kachel:rgba(255,255,255,.055);
+  --ktd-rand:rgba(255,255,255,.13);
+  --ktd-rand-hell:rgba(45,0,96,.13);
+  --ktd-h:'Lilita One',Impact,'Arial Black',sans-serif;
+  --ktd-b:'Roboto',Arial,Helvetica,sans-serif;
+  --ktd-r:14px;               /* Radius Kacheln */
+  --ktd-r-stapel:28px;        /* Radius der Stapel-Karten */
+  --ktd-max:1240px;
+  --ktd-pad:clamp(18px,4vw,32px);
+  --ktd-ease:cubic-bezier(.22,.61,.36,1);
+  --ktd-ease-lang:cubic-bezier(.22,.55,.16,1);
+  --ktd-h1:clamp(2.4rem,7vw,5rem);
+  --ktd-h2:clamp(2.2rem,5.4vw,4.2rem);
+  --ktd-h3:clamp(1.1rem,2vw,1.35rem);
+  --ktd-lead:clamp(1rem,2vw,1.2rem);
+  --ktd-fliess:clamp(.92rem,1.8vw,1.05rem);
+}
+
+/* ---------- 2  Raster und Sektionen ---------- */
+.ktd-w{max-width:var(--ktd-max);margin:0 auto;padding:0 var(--ktd-pad)}
+.ktd-sek{padding:clamp(56px,8vw,96px) 0;font-family:var(--ktd-b);font-size:var(--ktd-fliess);line-height:1.6;-webkit-font-smoothing:antialiased}
+.ktd-sek--vio{background:var(--ktd-vio);color:var(--ktd-text)}
+.ktd-sek--tief{background:var(--ktd-tief);color:var(--ktd-text)}
+.ktd-sek--gruen{background:var(--ktd-gruen);color:var(--ktd-vio)}
+.ktd-sek--gold{background:var(--ktd-gold);color:var(--ktd-vio)}
+.ktd-sek--pink{background:var(--ktd-pink);color:var(--ktd-vio)}
+.ktd-sek--weiss{background:var(--ktd-weiss);color:var(--ktd-vio)}
+.ktd-sek--papier{background:var(--ktd-papier);color:var(--ktd-vio)}
+
+/* ---------- 3  Schrift ---------- */
+.ktd-h1,.ktd-h2,.ktd-h3{font-family:var(--ktd-h);font-weight:400;text-transform:uppercase;margin:0;line-height:.98}
+.ktd-h1{font-size:var(--ktd-h1)}
+.ktd-h2{font-size:var(--ktd-h2)}
+.ktd-h3{font-size:var(--ktd-h3);line-height:1.05}
+.ktd-sek--vio .ktd-h1,.ktd-sek--vio .ktd-h2,.ktd-sek--tief .ktd-h1,.ktd-sek--tief .ktd-h2{color:#fff}
+.ktd-eyebrow{font-family:var(--ktd-b);font-weight:500;font-size:clamp(.72rem,1.4vw,.82rem);letter-spacing:.2em;text-transform:uppercase;margin:0 0 .6em;color:var(--ktd-pink)}
+.ktd-sek--gruen .ktd-eyebrow,.ktd-sek--gold .ktd-eyebrow,.ktd-sek--pink .ktd-eyebrow{color:var(--ktd-vio)}
+.ktd-lead{font-size:var(--ktd-lead);max-width:52ch}
+
+/* ---------- 4  Knöpfe ----------
+   Regel: auf Violett pink, auf farbigem Grund violett. Flach, ohne Schatten. */
+.ktd-knopf{display:inline-flex;align-items:center;gap:.6em;font-family:var(--ktd-b);font-weight:700;font-size:.95rem;line-height:1;text-decoration:none;border:0;border-radius:999px;padding:.85em 1.5em;cursor:pointer;background:var(--ktd-pink);color:#fff;transition:background .2s}
+.ktd-sek--gruen .ktd-knopf,.ktd-sek--gold .ktd-knopf,.ktd-sek--pink .ktd-knopf,.ktd-sek--weiss .ktd-knopf,.ktd-sek--papier .ktd-knopf,.ktd-knopf--vio{background:var(--ktd-vio);color:#fff}
+.ktd-knopf i{width:26px;height:26px;margin-right:-.7em;border-radius:50%;display:grid;place-content:center;font-style:normal;font-family:var(--ktd-h);background:var(--ktd-gruen);color:var(--ktd-vio)}
+.ktd-knopf:focus-visible{outline:3px solid var(--ktd-pink);outline-offset:3px}
+
+/* ---------- 5  Pillen ---------- */
+.ktd-pille{display:inline-flex;align-items:center;gap:.4em;font-family:var(--ktd-b);font-weight:700;font-size:clamp(.66rem,1.2vw,.74rem);letter-spacing:.08em;text-transform:uppercase;padding:.35em .85em;border-radius:999px;white-space:nowrap;border:1px solid currentColor;text-decoration:none;line-height:1.3}
+.ktd-pille--status{background:var(--ktd-gelb);color:var(--ktd-vio);border-color:var(--ktd-vio)}
+.ktd-pille--gold{background:var(--ktd-gold);color:var(--ktd-vio);border-color:var(--ktd-gold)}
+
+/* ---------- 6  Bento-Kacheln ---------- */
+.ktd-bento{display:flex;flex-direction:column;gap:8px;border-radius:var(--ktd-r);padding:clamp(16px,2vw,22px);text-decoration:none;border:1px solid var(--ktd-rand);background:var(--ktd-kachel);color:inherit;transition:border-color .2s}
+a.ktd-bento:hover{border-color:var(--ktd-pink)}
+.ktd-sek--weiss .ktd-bento,.ktd-sek--papier .ktd-bento{background:var(--ktd-papier);border-color:var(--ktd-rand-hell)}
+.ktd-sek--papier .ktd-bento{background:var(--ktd-weiss)}
+.ktd-bento--gruen{background:var(--ktd-gruen);border-color:var(--ktd-gruen);color:var(--ktd-vio)}
+.ktd-bento--gold{background:var(--ktd-gold);border-color:var(--ktd-gold);color:var(--ktd-vio)}
+.ktd-bento--pink{background:var(--ktd-pink);border-color:var(--ktd-pink);color:#fff}
+.ktd-bento--vio{background:var(--ktd-vio);border-color:var(--ktd-vio);color:var(--ktd-text)}
+.ktd-bento--tief{background:var(--ktd-tief);border-color:var(--ktd-tief);color:var(--ktd-text)}
+
+/* ---------- 7  Bild mit Bildunterschrift ----------
+   Regel: jedes Bild mit Name, Anlass, Land und Credit. Nie beschnitten. */
+.ktd-bild{margin:0}
+.ktd-bild img{display:block;width:100%;height:auto}
+.ktd-bild figcaption{font-family:var(--ktd-b);font-size:.85rem;color:var(--ktd-ged);padding:12px var(--ktd-pad) 22px;max-width:var(--ktd-max);margin:0 auto}
+.ktd-bild figcaption strong{color:#fff}
+
+/* ---------- 8  Turnerinnen-Karten mit Umdrehen ----------
+   Aufbau: button.ktd-karte > span.ktd-karte__in > span.ktd-karte__vorn + span.ktd-karte__hinten */
+.ktd-karten{display:grid;gap:14px;grid-template-columns:repeat(var(--ktd-spalten,5),1fr)}
+@media(max-width:1000px){.ktd-karten{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(210px,60vw);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px}.ktd-karten>*{scroll-snap-align:start}}
+.ktd-karte{display:block;width:100%;aspect-ratio:3/4.3;perspective:1200px;border:0;padding:0;background:none;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.ktd-karte__in{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s var(--ktd-ease-lang)}
+.ktd-karte[aria-pressed="true"] .ktd-karte__in{transform:rotateY(180deg)}
+.ktd-karte__vorn,.ktd-karte__hinten{display:block;position:absolute;inset:0;border-radius:var(--ktd-r);overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden;border:2px solid transparent;transition:border-color .2s}
+.ktd-karte:hover .ktd-karte__vorn,.ktd-karte:hover .ktd-karte__hinten{border-color:var(--ktd-pink)}
+.ktd-karte:focus-visible{outline:3px solid var(--ktd-pink);outline-offset:4px;border-radius:var(--ktd-r)}
+.ktd-karte__vorn img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.ktd-karte__fuss{position:absolute;left:0;right:0;bottom:0;padding:13px 13px 15px;background:var(--ktd-tief);font-family:var(--ktd-b)}
+.ktd-karte__fuss b{display:block;font-family:var(--ktd-h);font-weight:400;font-size:clamp(1.05rem,1.7vw,1.3rem);line-height:1;text-transform:uppercase;color:#fff}
+.ktd-karte__fuss span{display:block;font-size:.78rem;color:var(--ktd-ged);margin-top:6px;line-height:1.3}
+.ktd-karte__vorn .ktd-pille{position:absolute;top:11px;left:11px;background:var(--ktd-vio);color:var(--ktd-gold);border-color:var(--ktd-vio)}
+.ktd-karte__hinten{display:flex;flex-direction:column;gap:10px;padding:15px;transform:rotateY(180deg);background:var(--ktd-vio);color:var(--ktd-text);font-family:var(--ktd-b)}
+
+/* ---------- 9  Einblenden (wie Landingpage) ----------
+   Elemente mit .ktd-einblenden steigen auf, sobald sie ins Bild kommen. */
+.ktd-einblenden{opacity:0;transform:translateY(34px);transition:opacity 1.05s var(--ktd-ease),transform 1.05s var(--ktd-ease)}
+.ktd-einblenden.ktd-in{opacity:1;transform:none}
+
+/* ---------- 10  Herzschlag für runde Sticker ---------- */
+.ktd-sticker{display:grid;place-content:center;text-align:center;aspect-ratio:1;border-radius:50%;background:var(--ktd-gold);color:var(--ktd-vio);transform:rotate(-9deg);animation:ktd-herz 2.6s ease-in-out infinite}
+@keyframes ktd-herz{0%,100%{transform:rotate(-9deg) scale(1)}12%{transform:rotate(-9deg) scale(1.035)}24%{transform:rotate(-9deg) scale(1)}36%{transform:rotate(-9deg) scale(1.02)}48%{transform:rotate(-9deg) scale(1)}}
+
+/* ---------- 11  Karten-Stapel beim Scrollen ----------
+   Container mit .ktd-stapel; jede direkte Kind-Sektion schiebt sich über die vorige.
+   Die Höhe rechnet ktd.js aus. Die überdeckte Karte dunkelt leicht ab. */
+.ktd-stapel>*{position:sticky;top:0}
+.ktd-stapel>*:not(:first-child){border-radius:var(--ktd-r-stapel) var(--ktd-r-stapel) 0 0}
+.ktd-stapel>*::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#12002B;opacity:var(--ktd-dunkel,0);pointer-events:none;z-index:4}
+.ktd-stapel>*:last-child{position:relative}
+
+/* ---------- 12  Weniger Bewegung ---------- */
+@media (prefers-reduced-motion:reduce){
+  .ktd-einblenden{opacity:1;transform:none;transition:none}
+  .ktd-karte__in{transition:none}
+  .ktd-sticker{animation:none}
+}
