@@ -1,4 +1,4 @@
-/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.1.1 · Stand 28.09.2026
+/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.1.3 · Stand 28.09.2026
    Daten kommen aus JSON-Blöcken der Seite (#wk-daten-termine, #wk-daten-team, #wk-daten-fav-1/2). */
 
 (function(){
@@ -147,10 +147,10 @@
   var GN={AA:"Mehrkampf",VT:"Sprung",UB:"Stufenbarren",BB:"Schwebebalken",FX:"Boden"};
   var FK=document.getElementById("fav-karten");
   function register(g){var h="";
-    REG[g].forEach(function(f,i){
+    REG[g].slice().sort(function(x,y){return x.n.localeCompare(y.n,'de')}).forEach(function(f,i){
       var zl="";f.r.forEach(function(x){zl+="<div><span>"+x[1]+"</span><em>"+z(x[0])+"</em></div>"});
-      h+="<button class='karte' aria-pressed='false' aria-label='"+f.v+" "+f.n+", Platz "+(i+1)+": Wertungen anzeigen'><span class='karte__in'>"+
-        "<span class='karte__vorn'><img src='"+f.img+"' loading='lazy' alt='' style='object-position:50% 22%'><span class='rang'>"+(i+1)+"</span>"+
+      h+="<button class='karte' aria-pressed='false' aria-label='"+f.v+" "+f.n+": Wertungen anzeigen'><span class='karte__in'>"+
+        "<span class='karte__vorn'><img src='"+f.img+"' loading='lazy' alt='' style='object-position:50% 22%'>"+
         "<span class='karte__fuss'><b>"+f.v+"<br>"+f.n+"</b><span>"+f.land+"</span></span></span>"+
         "<span class='karte__hinten'><b class='n'>"+f.v+"<br>"+f.n+"</b><span class='bestwert'><small>Bestnote "+GN[g]+"</small><em>"+z(f.b)+"</em><span>"+f.bw+"</span></span>"+
         "<span class='zuletzt'>"+zl+"</span></span></span></button>"});
