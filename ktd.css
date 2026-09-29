@@ -1,6 +1,6 @@
 /* =====================================================================
    Kunstturnen Deutschland · zentrale Gestaltung
-   Datei: ktd.css · Version 0.2.1 · Stand 28.09.2026
+   Datei: ktd.css · Version 0.3.0 · Stand 28.09.2026
    Grundsatz: Diese Datei setzt KEINE globalen Stile (kein body, kein h1).
    Alles wirkt nur über Klassen mit dem Präfix "ktd-". Wird sie in den
    Site-Kopf eingebunden, verändert sich an bestehenden Seiten nichts.
@@ -159,6 +159,17 @@ a.ktd-bento:hover{border-color:var(--ktd-pink)}
 @keyframes ktd-stempel-herz{0%,38%,100%{transform:rotate(-7deg) scale(1)}9%{transform:rotate(-7deg) scale(1.016)}18%{transform:rotate(-7deg) scale(1.002)}27%{transform:rotate(-7deg) scale(1.009)}}
 @media(max-width:820px){.ktd-quiz-in{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.ktd-stempel{animation:none}}
+
+
+/* ---------- 14  In den Kalender ---------- */
+.ktd-kal-knopf{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;border:1.5px solid currentColor;background:transparent;color:inherit;cursor:pointer;padding:0;position:relative;z-index:2;transition:background .2s,color .2s,border-color .2s}
+.ktd-kal-knopf svg{width:17px;height:17px;display:block}
+.ktd-kal-knopf:hover{background:var(--ktd-pink);border-color:var(--ktd-pink);color:#fff}
+.ktd-kal-knopf:focus-visible{outline:3px solid var(--ktd-pink);outline-offset:3px}
+.ktd-kalmenu{position:fixed;z-index:9500;min-width:230px;background:var(--ktd-vio);color:#fff;border-radius:16px;padding:10px;box-shadow:0 14px 40px rgba(28,0,64,.35);font-family:var(--ktd-b)}
+.ktd-kalmenu__k{margin:4px 10px 8px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ktd-gruen)}
+.ktd-kalmenu__a{display:block;padding:11px 12px;border-radius:10px;color:#fff;text-decoration:none;font-weight:500;font-size:15px}
+.ktd-kalmenu__a:hover,.ktd-kalmenu__a:focus-visible{background:rgba(255,255,255,.1);outline:none}
 
 /* ---------- 12  Weniger Bewegung ---------- */
 @media (prefers-reduced-motion:reduce){

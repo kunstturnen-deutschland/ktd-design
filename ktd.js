@@ -1,7 +1,7 @@
 /* =====================================================================
    Kunstturnen Deutschland · zentrale Skripte
-   Datei: ktd.js · Version 0.2.1 · Stand 28.09.2026
-   Enthält: Karten umdrehen, Einblenden, Karten-Stapel mit Abdunkeln, Quiz.
+   Datei: ktd.js · Version 0.3.0 · Stand 28.09.2026
+   Enthält: Karten umdrehen, Einblenden, Karten-Stapel mit Abdunkeln, Quiz, Termine in den Kalender.
    Alles greift nur auf Elemente mit ktd-Klassen zu.
    ===================================================================== */
 (function(){
@@ -100,6 +100,41 @@
     starte(false);
   }
 
+
+  /* ---------- In den Kalender ----------
+     Jedes Element mit data-ktd-kal öffnet ein kleines Menü: Apple/Outlook (.ics) oder Google Kalender.
+     data-titel, data-start (JJJJ-MM-TT oder JJJJ-MM-TTTHH:MM), data-ende, data-ort, data-url, data-info, data-dauer (Minuten) */
+  var KM=null;
+  function zwei(n){return(n<10?"0":"")+n}
+  function tagPlus(s,n){var p=s.split("-"),d=new Date(Date.UTC(+p[0],+p[1]-1,+p[2]+n));return d.getUTCFullYear()+zwei(d.getUTCMonth()+1)+zwei(d.getUTCDate())}
+  function zeitPlus(s,min){var p=s.split(/[-T:]/),d=new Date(Date.UTC(+p[0],+p[1]-1,+p[2],+p[3],+p[4]+min));return d.getUTCFullYear()+zwei(d.getUTCMonth()+1)+zwei(d.getUTCDate())+"T"+zwei(d.getUTCHours())+zwei(d.getUTCMinutes())+"00"}
+  function termin(b){var t={titel:b.getAttribute("data-titel")||"",start:b.getAttribute("data-start")||"",ende:b.getAttribute("data-ende")||"",ort:b.getAttribute("data-ort")||"",url:b.getAttribute("data-url")||"",info:b.getAttribute("data-info")||"",dauer:parseInt(b.getAttribute("data-dauer")||"120",10)};
+    if(t.url&&t.url.charAt(0)==="/")t.url=location.origin+t.url;t.zeit=t.start.indexOf("T")>0;
+    if(t.zeit){t.a=zeitPlus(t.start,0);t.b=zeitPlus(t.start,t.dauer)}else{t.a=tagPlus(t.start,0);t.b=tagPlus(t.ende||t.start,1)}return t}
+  function ics(t){function esc(s){return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n")}
+    var jetzt=new Date(),st=jetzt.getUTCFullYear()+zwei(jetzt.getUTCMonth()+1)+zwei(jetzt.getUTCDate())+"T"+zwei(jetzt.getUTCHours())+zwei(jetzt.getUTCMinutes())+"00Z";
+    var z=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Kunstturnen Deutschland//Termine//DE","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+    if(t.zeit)z.push("BEGIN:VTIMEZONE","TZID:Europe/Berlin","BEGIN:DAYLIGHT","TZOFFSETFROM:+0100","TZOFFSETTO:+0200","TZNAME:CEST","DTSTART:19700329T020000","RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU","END:DAYLIGHT","BEGIN:STANDARD","TZOFFSETFROM:+0200","TZOFFSETTO:+0100","TZNAME:CET","DTSTART:19701025T030000","RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU","END:STANDARD","END:VTIMEZONE");
+    z.push("BEGIN:VEVENT","UID:"+t.a+"-"+t.titel.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"@kunstturnen-deutschland.de","DTSTAMP:"+st);
+    if(t.zeit)z.push("DTSTART;TZID=Europe/Berlin:"+t.a,"DTEND;TZID=Europe/Berlin:"+t.b);else z.push("DTSTART;VALUE=DATE:"+t.a,"DTEND;VALUE=DATE:"+t.b);
+    z.push("SUMMARY:"+esc(t.titel));if(t.ort)z.push("LOCATION:"+esc(t.ort));
+    var info=[t.info,t.url?"Alles zum Wettkampf: "+t.url:"","Kunstturnen Deutschland"].filter(Boolean).join("\n");z.push("DESCRIPTION:"+esc(info));if(t.url)z.push("URL:"+t.url);
+    if(t.zeit)z.push("BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+esc(t.titel),"TRIGGER:-PT30M","END:VALARM");
+    z.push("END:VEVENT","END:VCALENDAR");return z.join("\r\n")}
+  function google(t){var q="action=TEMPLATE&text="+encodeURIComponent(t.titel)+"&dates="+t.a+"/"+t.b+"&details="+encodeURIComponent([t.info,t.url].filter(Boolean).join("\n"))+"&location="+encodeURIComponent(t.ort);if(t.zeit)q+="&ctz=Europe%2FBerlin";return "https://calendar.google.com/calendar/render?"+q}
+  function kalZu(){if(KM){KM.remove();KM=null}}
+  function kalAuf(b){kalZu();var t=termin(b);if(!t.start)return;
+    var m=document.createElement("div");m.className="ktd-kalmenu";m.setAttribute("role","menu");
+    var a1=document.createElement("a");a1.className="ktd-kalmenu__a";a1.setAttribute("role","menuitem");a1.href="data:text/calendar;charset=utf-8,"+encodeURIComponent(ics(t));a1.download=(t.titel.replace(/[^A-Za-z0-9ÄÖÜäöüß]+/g,"-").replace(/^-|-$/g,"")||"termin")+".ics";a1.textContent="Apple, Outlook und andere";
+    var a2=document.createElement("a");a2.className="ktd-kalmenu__a";a2.setAttribute("role","menuitem");a2.href=google(t);a2.target="_blank";a2.rel="noopener";a2.textContent="Google Kalender";
+    var k=document.createElement("p");k.className="ktd-kalmenu__k";k.textContent="In den Kalender";m.appendChild(k);m.appendChild(a1);m.appendChild(a2);
+    document.body.appendChild(m);var r=b.getBoundingClientRect(),w=m.offsetWidth,h=m.offsetHeight;
+    var x=Math.min(Math.max(8,r.right-w),window.innerWidth-w-8),y=r.bottom+8;if(y+h>window.innerHeight-8)y=Math.max(8,r.top-h-8);
+    m.style.left=x+"px";m.style.top=y+"px";KM=m;[a1,a2].forEach(function(a){a.addEventListener("click",function(){setTimeout(kalZu,50)})});a1.focus({preventScroll:true})}
+  document.addEventListener("click",function(ev){var b=ev.target.closest&&ev.target.closest("[data-ktd-kal]");if(b){ev.preventDefault();ev.stopPropagation();if(KM&&KM.__b===b){kalZu();return}kalAuf(b);if(KM)KM.__b=b;return}if(KM&&!KM.contains(ev.target))kalZu()},true);
+  document.addEventListener("keydown",function(ev){if(ev.key==="Escape")kalZu()});
+  window.addEventListener("scroll",function(){if(KM)kalZu()},{passive:true});
+
   function start(){
     einblenden(document);
     document.querySelectorAll(".ktd-stapel").forEach(stapel);
@@ -108,5 +143,5 @@
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
 
   /* Für nachgeladene Inhalte, z. B. Register mit neuen Karten */
-  window.ktd={einblenden:einblenden,version:"0.2.1"};
+  window.ktd={einblenden:einblenden,version:"0.3.0"};
 })();

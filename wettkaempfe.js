@@ -1,4 +1,4 @@
-/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.2.0 · Stand 28.09.2026
+/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.3.2 · Stand 28.09.2026
    Daten kommen aus JSON-Blöcken der Seite (#wk-daten-termine, #wk-daten-team, #wk-daten-fav-1/2). */
 
 (function(){
@@ -115,7 +115,7 @@
     EV.forEach(function(x){x.g.classList.remove("offen")});e.g.classList.add("offen");offen=i;
     var r=box.getBoundingClientRect(),sc=r.width/W;
     pop.style.left=Math.max(130,Math.min(r.width-130,cx(e)*sc))+"px";pop.style.top=((e.t==="wm"?Y-58:Y-14)*sc)+"px";
-    pop.innerHTML="<button class='zu' aria-label='Schließen'>×</button><b>"+e.titel+"</b><p>"+e.txt+"</p><div class='reihe'><span class='pille'>"+e.typ+"</span><a class='los' href='"+(e.link||"#kalender")+"' data-z='"+e.titel+"'>Zum Wettkampf</a></div>";
+    pop.innerHTML="<button class='zu' aria-label='Schließen'>×</button><b>"+e.titel+"</b><p>"+e.txt+"</p><div class='reihe'><span class='pille'>"+e.typ+"</span>"+(function(){var q=T.filter(function(x){return x[0]===e.d})[0];return q?kalKnopf("Kunstturnen: "+q[2],q[0],q[1],q[3],q[7],"los-kal"):""})()+"<a class='los' href='"+(e.link||"#kalender")+"' data-z='"+e.titel+"'>Zum Wettkampf</a></div>";
     pop.classList.add("da");pop.querySelector(".zu").onclick=schliesse;if(tast)pop.querySelector(".los").focus({preventScroll:true});tast=false}
   function schliesse(){pop.classList.remove("da");EV.forEach(function(x){x.g.classList.remove("offen")});offen=-1}
   document.addEventListener("click",function(ev){if(offen>=0&&!box.contains(ev.target))schliesse()});
@@ -148,18 +148,21 @@
   var MO=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
   var tab="2026",filt="alle",LI=document.getElementById("liste");
   function spanne(a,b){return a===b?tt(a):tt(a)+"–"+tt(b)}
+  var KALI="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' aria-hidden='true'><rect x='3.5' y='5' width='17' height='15.5' rx='3'/><path d='M3.5 10h17M8 3v4M16 3v4M12 13.2v4.6M9.7 15.5h4.6'/></svg>";
+  function kalKnopf(titel,start,ende,ort,url,cls){return "<button type='button' class='ktd-kal-knopf"+(cls?" "+cls:"")+"' data-ktd-kal data-titel='"+String(titel).replace(/'/g,"&#39;")+"' data-start='"+start+"' data-ende='"+(ende||"")+"' data-ort='"+String(ort||"").replace(/'/g,"&#39;")+"' data-url='"+(url||"/wettkaempfe")+"' aria-label='"+String(titel).replace(/'/g,"&#39;")+" in den Kalender eintragen'>"+KALI+"</button>"}
   function liste(){
     var zz=T.filter(function(e){var v=d(e[1])<heute;
       if(tab==="vorbei"){if(!v)return false}else{if(v||e[0].slice(0,4)!==tab)return false}
-      return filt==="alle"||e[4]===filt}).sort(function(a,b){return tab==="vorbei"?(a[0]<b[0]?1:-1):(a[0]<b[0]?-1:1)});
+      return filt==="alle"||(filt==="nat"?e[4]!=="int":e[4]===filt)}).sort(function(a,b){return tab==="vorbei"?(a[0]<b[0]?1:-1):(a[0]<b[0]?-1:1)});
     if(!zz.length){LI.innerHTML="<p>In diesem Zeitraum steht nichts an.</p>";return}
     var h="",mon="";
     zz.forEach(function(e){var x=d(e[0]),m=MO[x.getMonth()]+" "+x.getFullYear();
       if(m!==mon){if(mon)h+="</div></div>";h+="<div class='monat'><h3>"+m+"</h3><div class='zeilen'>";mon=m}
       var t=tage(e[0]),v=d(e[1])<heute,p="";
       var uhr=v?"":(t<=0?"<span class='pille pille--gelb'>Läuft gerade</span>":"<span class='pille pille--gelb'>In "+t+(t===1?" Tag":" Tagen")+"</span>");
-      p="<span class='pille"+(e[6]?" pille--gold":"")+"'>"+e[5]+"</span>";
-      var tg=e[7]?"a":"div";h+="<"+tg+(e[7]?" href='"+e[7]+"'":"")+" class='zeile"+(v?" zeile--vorbei":"")+"'><span class='zeile__datum'>"+spanne(e[0],e[1])+"</span><span class='zeile__name'>"+e[2]+"<span class='zeile__ort'>"+e[3]+"</span></span><span class='zeile__typ'>"+p+"</span><span class='zeile__uhr'>"+uhr+"</span><span class='zeile__pfeil' aria-hidden='true'>"+(e[7]?"›":"")+"</span></"+tg+">"});
+      p="<span class='pille"+(e[6]?" pille--gold":"")+"'>"+(e[4]==="int"?"International":"National")+"</span>";
+      var nm=e[7]?"<a class='zeile__link' href='"+e[7]+"'>"+e[2]+"</a>":e[2];
+      h+="<div class='zeile"+(v?" zeile--vorbei":"")+(e[7]?" zeile--link":"")+"'><span class='zeile__datum'>"+spanne(e[0],e[1])+"</span><span class='zeile__name'>"+nm+"<span class='zeile__ort'>"+e[3]+"</span></span><span class='zeile__typ'>"+p+"</span><span class='zeile__uhr'>"+uhr+"</span><span class='zeile__kal'>"+(v?"":kalKnopf("Kunstturnen: "+e[2],e[0],e[1],e[3],e[7]))+"</span><span class='zeile__pfeil' aria-hidden='true'>"+(e[7]?"›":"")+"</span></div>"});
     LI.innerHTML=h+"</div></div>";
   }
   document.querySelectorAll(".tabs button").forEach(function(b){b.addEventListener("click",function(){
