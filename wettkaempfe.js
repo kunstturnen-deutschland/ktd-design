@@ -1,4 +1,4 @@
-/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.3.3 · Stand 28.09.2026
+/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.4.0 · Stand 28.09.2026
    Daten kommen aus JSON-Blöcken der Seite (#wk-daten-termine, #wk-daten-team, #wk-daten-fav-1/2). */
 
 (function(){
@@ -18,28 +18,42 @@
 
   /* ===== Zeitleiste: klickbar, Punkte ziehbar, federn zurück ===== */
   var NS="http://www.w3.org/2000/svg",W=1200,H=318,P=34,Y=190;
-  var L0=d("2026-09-25"),L1=d("2026-12-04");
+  /* Die Zeitleiste setzt sich selbst zusammen: von fünf Tagen zurück bis zehn Wochen voraus, aus #wk-daten-termine.
+     Je Termin: [start, ende, name, ort, kat, typ, gold, link, kurzname, kurzort] */
+  var TL=JSON.parse((document.getElementById("wk-daten-termine")||{}).textContent||"null")||[];
+  var L0=new Date(heute.getTime()-5*864e5),L1=new Date(heute.getTime()+70*864e5);
+  // In ruhigen Phasen (etwa über den Winter) reicht die Leiste weiter, bis mindestens drei Wettkämpfe darauf stehen, höchstens ein halbes Jahr
+  (function(){var k=TL.filter(function(e){return d(e[1])>=heute}).map(function(e){return d(e[0])}).sort(function(a,b){return a-b});
+    if(k.length>=3&&k[2]>L1)L1=new Date(Math.min(k[2].getTime()+10*864e5,heute.getTime()+183*864e5))})();
   function X(dt){return P+(dt-L0)/(L1-L0)*(W-2*P)}
   function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
-  var EV=[
-    {d:"2026-10-03",n:"Quali",i:"Stuttgart · 03./04.10.",l:1,t:"q",titel:"WM-Qualifikation",txt:"Zweiter und dritter Qualifikationswettkampf, Stuttgart, 3. und 4. Oktober",typ:"Nationalteam"},
-    {d:"2026-10-21",n:"Rotterdam",i:"WM · 17.–25.10.",l:2,t:"wm",titel:"Weltmeisterschaft Rotterdam",txt:"Rotterdam Ahoy, 17. bis 25. Oktober. Das deutsche Team turnt am 18. Oktober ab 16 Uhr.",typ:"WM",link:"/wettkampf/wm-rotterdam-2026"},
-    {d:"2026-10-31",n:"Combs-la-Ville",i:"Tournoi · 31.10.",l:1,titel:"Tournoi International",txt:"Combs-la-Ville, Frankreich, 31. Oktober bis 1. November",typ:"International"},
-    {d:"2026-11-01",n:"Jugendspiele",i:"Dakar · bis 13.11.",l:3,titel:"Olympische Jugendspiele",txt:"Dakar, Senegal, 31. Oktober bis 13. November",typ:"International"},
-    {d:"2026-11-07",n:"Swiss Cup",i:"Zürich · 07.11.",l:2,titel:"Swiss Cup",txt:"Hallenstadion, Zürich, 7. November",typ:"International",link:"/wettkampf/swiss-cup-zuerich-2026"},
-    {d:"2026-11-14",n:"GymnovaCup",i:"Keerbergen · 14./15.11.",l:3,titel:"Gympies-GymnovaCup",txt:"Keerbergen, Belgien, 14. und 15. November",typ:"International",link:"/wettkampf/gymnovacup-keerbergen-2026"},
-    {d:"2026-11-14",n:"Bundesliga",i:"Esslingen · 14.11.",l:1,t:"bl",titel:"Bundesliga in Esslingen",txt:"4. Wettkampftag, Sporthalle Weil, 14. November",typ:"Bundesliga",link:"/wettkampf/bundesliga-esslingen-2026"},
-    {d:"2026-11-21",n:"Aufstiegsfinale",i:"DTL · 21.11.",l:2,t:"bl",titel:"DTL-Aufstiegsfinale",txt:"21. November, Ausrichter noch offen",typ:"Bundesliga",link:"/wettkampf/dtl-aufstiegsfinale-2026"},
-    {d:"2026-11-28",n:"Čáslavská Cup",i:"Brünn · 28./29.11.",l:3,titel:"Čáslavská Cup",txt:"Brünn, Tschechien, 28. und 29. November",typ:"International",link:"/wettkampf/caslavska-cup-brno-2026"},
-    {d:"2026-11-28",n:"DTL-Finale",i:"Heidelberg · 28.11.",l:1,t:"bl",titel:"DTL-Finale",txt:"SNP dome, Heidelberg, 28. November",typ:"Bundesliga",link:"/wettkampf/dtl-finale-2026"}
-  ];
+  var MON=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  function spanne(a,b){var x=d(a),y=d(b),dd=function(n){return("0"+n).slice(-2)};
+    if(a===b)return dd(x.getDate())+"."+dd(x.getMonth()+1)+".";
+    if(x.getMonth()===y.getMonth())return dd(x.getDate())+"./"+dd(y.getDate())+"."+dd(x.getMonth()+1)+".";
+    return dd(x.getDate())+"."+dd(x.getMonth()+1)+".–"+dd(y.getDate())+"."+dd(y.getMonth()+1)+"."}
+  function lang(a,b){var x=d(a),y=d(b),o={day:"numeric",month:"long"};return a===b?x.toLocaleDateString("de-DE",o):x.toLocaleDateString("de-DE",o)+" bis "+y.toLocaleDateString("de-DE",o)}
+  var RAND=new Date(L1.getTime()-7*864e5);
+  var EV=TL.filter(function(e){return d(e[1])>=L0&&d(e[0])<=RAND&&d(e[1])>=heute}).sort(function(p,q){return p[0]<q[0]?-1:p[0]>q[0]?1:0}).map(function(e){
+    var wm=/Weltmeisterschaft/.test(e[2])&&!/Jugend|Junior/.test(e[2]);
+    var t=wm?"wm":/Qualifikation/.test(e[2])?"q":e[4]==="bl"?"bl":"";
+    var n=e[8]||e[2],o=e[9]||e[3].split(",")[0];
+    return {d:e[0],bis:e[1],n:n,i:o+" · "+spanne(e[0],e[1]),t:t,titel:e[2].replace(/^\d+\. /,""),txt:e[3]+", "+lang(e[0],e[1]),typ:e[4]==="int"?"International":"National",link:e[7]||""}});
+  // Beschriftungen auf drei Ebenen verteilen, damit sich nichts überdeckt
+  var LAST={1:-1e9,2:-1e9,3:-1e9};
+  EV.forEach(function(e){var x=X(d(e.d)),w=Math.max(e.n.length*9.5,e.i.length*6.4)+14,l=0;
+    for(var k=1;k<=3;k++){if(LAST[k]<x-4){l=k;break}}
+    if(!l){l=1;for(var k2=2;k2<=3;k2++)if(LAST[k2]<LAST[l])l=k2}
+    if(e.t==="wm"&&l===1)l=LAST[2]<x-4?2:LAST[3]<x-4?3:2;
+    e.l=l;LAST[l]=x+w});
   var LY={1:228,2:266,3:304};
   var box=document.getElementById("leiste"),pop=document.getElementById("pop");if(!box||!pop)return;
   var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"group","aria-label":"Die nächsten zehn Wochen als Sprungfolge. Punkte lassen sich anklicken und ziehen."});
   box.insertBefore(svg,pop);
-  ["2026-10-01","2026-11-01","2026-12-01"].forEach(function(m,i){var x=X(d(m));el("line",{"class":"lt-raster",x1:x,y1:34,x2:x,y2:Y},svg);var t=el("text",{"class":"lt-monat",x:x+6,y:30},svg);t.textContent=["Oktober","November","Dezember"][i]});
+  for(var m=new Date(L0.getFullYear(),L0.getMonth()+1,1);m<=L1;m=new Date(m.getFullYear(),m.getMonth()+1,1)){var mx=X(m);if(mx>W-P-60)break;
+    el("line",{"class":"lt-raster",x1:mx,y1:34,x2:mx,y2:Y},svg);var mt=el("text",{"class":"lt-monat",x:mx+6,y:30},svg);mt.textContent=MON[m.getMonth()]}
   el("line",{"class":"lt-basis",x1:P,y1:Y,x2:W-P,y2:Y},svg);
-  var dakar=el("line",{"class":"lt-dakar",x1:X(d("2026-10-31")),y1:Y+9,x2:X(d("2026-11-13")),y2:Y+9},svg);
+  EV.forEach(function(e){if(e.t!=="wm"&&(d(e.bis)-d(e.d))/864e5>=6)el("line",{"class":"lt-dakar",x1:X(d(e.d)),y1:Y+9,x2:Math.min(W-P,X(d(e.bis))),y2:Y+9},svg)});
   var hx=X(heute);
   var gB=el("g",{},svg);
   el("line",{"class":"lt-heute",x1:hx,y1:44,x2:hx,y2:Y+10},svg);
@@ -53,12 +67,12 @@
     e.nm=el("text",{"class":"lt-name",y:LY[e.l]},g);e.nm.textContent=e.n;
     e.inf=el("text",{"class":"lt-info",y:LY[e.l]+14},g);e.inf.textContent=e.i;
     if(e.t==="wm"){
-      var wt=Math.max(0,tage("2026-10-17"));
+      var wt=tage(e.d),lauft=wt<=0;
       e.puls=el("g",{"class":"lt-puls"},g);
       e.mk=el("circle",{cy:Y-2,r:50,style:"fill:var(--gold);stroke:var(--vio);stroke-width:3"},e.puls);
-      e.t1=el("text",{y:Y-16,"text-anchor":"middle",style:"font:700 11px var(--b);letter-spacing:.14em;fill:var(--vio)"},e.puls);e.t1.textContent="WM IN";
-      e.t2=el("text",{y:Y+16,"text-anchor":"middle",style:"font:400 36px var(--h);fill:var(--vio)"},e.puls);e.t2.textContent=wt;
-      e.t3=el("text",{y:Y+31,"text-anchor":"middle",style:"font:700 10px var(--b);letter-spacing:.14em;fill:var(--vio)"},e.puls);e.t3.textContent="TAGEN";
+      e.t1=el("text",{y:Y-16,"text-anchor":"middle",style:"font:700 11px var(--b);letter-spacing:.14em;fill:var(--vio)"},e.puls);e.t1.textContent=lauft?"DIE WM":"WM IN";
+      e.t2=el("text",{y:Y+16,"text-anchor":"middle",style:"font:400 36px var(--h);fill:var(--vio)"},e.puls);e.t2.textContent=lauft?"LÄUFT":wt;if(lauft)e.t2.setAttribute("style","font:400 22px var(--h);fill:var(--vio)");
+      e.t3=el("text",{y:Y+31,"text-anchor":"middle",style:"font:700 10px var(--b);letter-spacing:.14em;fill:var(--vio)"},e.puls);e.t3.textContent=lauft?"":(wt===1?"TAG":"TAGEN");
       e.hit=el("circle",{"class":"lt-hit",cy:Y-2,r:52},g);
     }else{
       var f=e.t==="q"?"var(--pink)":e.t==="bl"?"var(--gruen)":"var(--vio)";
