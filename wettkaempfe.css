@@ -307,25 +307,24 @@
 .wk .ktd-abo-knopf{background:var(--pink)}
 .wk .ktd-abo-knopf:hover{background:var(--vio)}
 
-/* 0.4.0 · Demnächst in Deutschland: breiter Streifen mit Foto, darunter drei pinke Blöcke */
+/* 0.4.1 · Demnächst in Deutschland als Bento: oben Bild und grüner Quali-Block, darunter drei pinke Blöcke */
 .wk .demn-kopf{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px}
 .wk .demn-kopf .dtl{margin-top:0;align-self:center}
-.wk .quali{display:grid;grid-template-columns:1fr 1.15fr;margin-top:26px;border-radius:var(--r);overflow:hidden;background:var(--gruen);color:var(--vio);text-decoration:none;border:2px solid var(--gruen);transition:border-color .2s}
+.wk .bento{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+.wk .bento__bild{margin:0;position:relative;border-radius:var(--r);overflow:hidden;min-height:320px;background:var(--tief)}
+.wk .bento__bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:42% 35%;display:block}
+.wk .bento__bild figcaption{position:absolute;left:0;right:0;bottom:0;padding:30px 16px 12px;font-size:.78rem;color:#fff;background:linear-gradient(transparent,rgba(28,0,64,.8))}
+.wk .quali{grid-column:2/4;background:var(--gruen);color:var(--vio);border-radius:var(--r);padding:clamp(22px,3.2vw,40px);text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;gap:8px;border:2px solid var(--gruen);transition:border-color .2s}
 .wk .quali:hover{border-color:var(--pink)}
-.wk .quali__text{padding:clamp(22px,3.2vw,40px);display:flex;flex-direction:column;align-items:flex-start;gap:8px}
 .wk .quali__datum{font-family:var(--h);font-size:clamp(1.8rem,3.4vw,2.6rem);line-height:1;margin-top:6px}
 .wk .quali__name{font-family:var(--h);font-weight:400;font-size:clamp(2rem,4.2vw,3.4rem);text-transform:uppercase;line-height:.95;margin:0;color:var(--vio)}
 .wk .quali__ort{margin:0;font-weight:700;opacity:.8}
-.wk .quali__lead{margin:6px 0 0;font-size:1.02rem;line-height:1.45;max-width:34ch}
+.wk .quali__lead{margin:6px 0 0;font-size:1.02rem;line-height:1.45;max-width:40ch}
 .wk .quali__los{margin-top:auto;padding-top:14px;font-weight:700;display:inline-flex;gap:.5em;align-items:center}
 .wk .quali__los i{font-style:normal;transition:transform .2s}
 .wk .quali:hover .quali__los i{transform:translateX(4px)}
-.wk .quali__bild{margin:0;position:relative;min-height:300px}
-.wk .quali__bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}
-.wk .quali__bild figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 10px;font-size:.78rem;color:#fff;background:linear-gradient(transparent,rgba(28,0,64,.75))}
 .wk .quali .pille--gelb{background:var(--gelb);border-color:var(--gelb);color:var(--vio)}
-.wk .drei{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
-.wk .p{background:var(--pink);color:#fff;border-radius:var(--r);padding:clamp(18px,2.2vw,24px);text-decoration:none;display:flex;flex-direction:column;gap:6px;border:2px solid var(--pink);transition:border-color .2s,transform .2s}
+.wk .p{background:var(--pink);color:#fff;border-radius:var(--r);padding:clamp(18px,2.2vw,24px);text-decoration:none;display:flex;flex-direction:column;gap:6px;border:2px solid var(--pink);transition:border-color .2s}
 .wk .p:hover{border-color:#fff}
 .wk .p__datum{font-family:var(--h);font-size:clamp(1.5rem,2.6vw,2rem);line-height:1}
 .wk .p__name{font-family:var(--h);font-size:clamp(1.15rem,1.8vw,1.4rem);text-transform:uppercase;line-height:1.05;margin-top:4px}
@@ -334,4 +333,4 @@
 .wk .p__tab{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:5px}
 .wk .p__tab li{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:baseline;font-size:.86rem;font-weight:700;padding:6px 10px;border:1.5px solid rgba(255,255,255,.55);border-radius:9px}
 .wk .p__tab b,.wk .p__tab em{font-family:var(--h);font-weight:400;font-style:normal}
-@media(max-width:860px){.wk .quali{grid-template-columns:1fr}.wk .quali__bild{order:-1;min-height:230px}.wk .drei{grid-template-columns:1fr}}
+@media(max-width:860px){.wk .bento{grid-template-columns:1fr}.wk .quali{grid-column:auto}.wk .bento__bild{min-height:260px}}
