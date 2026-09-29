@@ -1,4 +1,4 @@
-/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.3.2 · Stand 28.09.2026
+/* Kunstturnen Deutschland · Seite Wettkämpfe · wettkaempfe.js · Version 0.3.3 · Stand 28.09.2026
    Daten kommen aus JSON-Blöcken der Seite (#wk-daten-termine, #wk-daten-team, #wk-daten-fav-1/2). */
 
 (function(){
@@ -160,7 +160,7 @@
       if(m!==mon){if(mon)h+="</div></div>";h+="<div class='monat'><h3>"+m+"</h3><div class='zeilen'>";mon=m}
       var t=tage(e[0]),v=d(e[1])<heute,p="";
       var uhr=v?"":(t<=0?"<span class='pille pille--gelb'>Läuft gerade</span>":"<span class='pille pille--gelb'>In "+t+(t===1?" Tag":" Tagen")+"</span>");
-      p="<span class='pille"+(e[6]?" pille--gold":"")+"'>"+(e[4]==="int"?"International":"National")+"</span>";
+      p="<span class='pille'>"+(e[4]==="int"?"International":"National")+"</span>";
       var nm=e[7]?"<a class='zeile__link' href='"+e[7]+"'>"+e[2]+"</a>":e[2];
       h+="<div class='zeile"+(v?" zeile--vorbei":"")+(e[7]?" zeile--link":"")+"'><span class='zeile__datum'>"+spanne(e[0],e[1])+"</span><span class='zeile__name'>"+nm+"<span class='zeile__ort'>"+e[3]+"</span></span><span class='zeile__typ'>"+p+"</span><span class='zeile__uhr'>"+uhr+"</span><span class='zeile__kal'>"+(v?"":kalKnopf("Kunstturnen: "+e[2],e[0],e[1],e[3],e[7]))+"</span><span class='zeile__pfeil' aria-hidden='true'>"+(e[7]?"›":"")+"</span></div>"});
     LI.innerHTML=h+"</div></div>";

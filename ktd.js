@@ -1,6 +1,6 @@
 /* =====================================================================
    Kunstturnen Deutschland · zentrale Skripte
-   Datei: ktd.js · Version 0.3.1 · Stand 28.09.2026
+   Datei: ktd.js · Version 0.3.2 · Stand 28.09.2026
    Enthält: Karten umdrehen, Einblenden, Karten-Stapel mit Abdunkeln, Quiz, Termine in den Kalender.
    Alles greift nur auf Elemente mit ktd-Klassen zu.
    ===================================================================== */
@@ -144,7 +144,7 @@
     function eintrag(t,h,neu){var a=document.createElement("a");a.className="ktd-kalmenu__a";a.setAttribute("role","menuitem");a.textContent=t;a.href=h;if(neu){a.target="_blank";a.rel="noopener"}a.addEventListener("click",function(){setTimeout(kalZu,50)});m.appendChild(a);return a}
     var a1=eintrag("Apple, Outlook und andere",w);eintrag("Google Kalender","https://calendar.google.com/calendar/r?cid="+encodeURIComponent(w),true);
     var c=eintrag("Adresse kopieren","#");c.addEventListener("click",function(ev){ev.preventDefault();try{navigator.clipboard.writeText(u);c.textContent="Adresse kopiert"}catch(x){prompt("Adresse zum Kopieren:",u)}});
-    var h=document.createElement("p");h.className="ktd-kalmenu__h";h.textContent="Alle Wettkämpfe im eigenen Kalender, aktualisiert sich von selbst.";m.appendChild(h);
+    var mac=/Macintosh/.test(navigator.userAgent)&&!("ontouchend" in document);var h=document.createElement("p");h.className="ktd-kalmenu__h";h.textContent=mac?"Tut sich am Mac nichts? Adresse kopieren und in der App Kalender unter „Ablage › Neues Kalenderabonnement“ einfügen.":"Alle Wettkämpfe im eigenen Kalender, aktualisiert sich von selbst.";m.appendChild(h);
     document.body.appendChild(m);var r=b.getBoundingClientRect(),mw=m.offsetWidth,mh=m.offsetHeight;
     var x=Math.min(Math.max(8,r.left),window.innerWidth-mw-8),y=r.bottom+8;if(y+mh>window.innerHeight-8)y=Math.max(8,r.top-mh-8);
     m.style.left=x+"px";m.style.top=y+"px";KM=m;KM.__b=b;a1.focus({preventScroll:true})}
@@ -158,5 +158,5 @@
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
 
   /* Für nachgeladene Inhalte, z. B. Register mit neuen Karten */
-  window.ktd={einblenden:einblenden,version:"0.3.1"};
+  window.ktd={einblenden:einblenden,version:"0.3.2"};
 })();

@@ -296,6 +296,13 @@
 .wk .pop .los-kal{color:inherit;width:34px;height:34px;margin-left:auto}
 .wk .t--quali{position:relative}.wk .quali-kal{position:absolute;right:14px;bottom:14px;color:var(--vio)}
 .wk .zeile__name{min-width:0}
-.wk .kal-leiste{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
+.wk .kal-leiste{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:40px}
 .wk .kal-leiste .filter{margin-bottom:0}
 .wk .ktd-abo-knopf{font:700 .78rem/1 var(--b);letter-spacing:.08em}
+.wk .rk__pfeil{font-style:normal;font-family:var(--b);font-weight:700;font-size:.8em;margin-left:8px;display:inline-block;transition:transform .2s}
+.wk .rk:hover .rk__pfeil{transform:translateX(3px)}
+.wk .sieg .sieg--breit{grid-column:1/-1}
+.wk .sieg .sieg--breit span{font-weight:500}
+.wk .sieg .sieg--breit span b{font-family:inherit;font-size:inherit;text-transform:none;color:#fff;display:inline;font-weight:700}
+.wk .ktd-abo-knopf{background:var(--pink)}
+.wk .ktd-abo-knopf:hover{background:var(--vio)}
