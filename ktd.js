@@ -1,6 +1,6 @@
 /* =====================================================================
    Kunstturnen Deutschland · zentrale Skripte
-   Datei: ktd.js · Version 0.3.0 · Stand 28.09.2026
+   Datei: ktd.js · Version 0.3.1 · Stand 28.09.2026
    Enthält: Karten umdrehen, Einblenden, Karten-Stapel mit Abdunkeln, Quiz, Termine in den Kalender.
    Alles greift nur auf Elemente mit ktd-Klassen zu.
    ===================================================================== */
@@ -135,6 +135,21 @@
   document.addEventListener("keydown",function(ev){if(ev.key==="Escape")kalZu()});
   window.addEventListener("scroll",function(){if(KM)kalZu()},{passive:true});
 
+
+  /* ---------- Kalender abonnieren ----------
+     Element mit data-ktd-abo="https://…/kalender.ics" öffnet ein Menü: Apple/Outlook (webcal), Google, Adresse kopieren */
+  function aboAuf(b){kalZu();var u=b.getAttribute("data-ktd-abo"),w=u.replace(/^https?:/,"webcal:");
+    var m=document.createElement("div");m.className="ktd-kalmenu";m.setAttribute("role","menu");
+    var k=document.createElement("p");k.className="ktd-kalmenu__k";k.textContent="Kalender abonnieren";m.appendChild(k);
+    function eintrag(t,h,neu){var a=document.createElement("a");a.className="ktd-kalmenu__a";a.setAttribute("role","menuitem");a.textContent=t;a.href=h;if(neu){a.target="_blank";a.rel="noopener"}a.addEventListener("click",function(){setTimeout(kalZu,50)});m.appendChild(a);return a}
+    var a1=eintrag("Apple, Outlook und andere",w);eintrag("Google Kalender","https://calendar.google.com/calendar/r?cid="+encodeURIComponent(w),true);
+    var c=eintrag("Adresse kopieren","#");c.addEventListener("click",function(ev){ev.preventDefault();try{navigator.clipboard.writeText(u);c.textContent="Adresse kopiert"}catch(x){prompt("Adresse zum Kopieren:",u)}});
+    var h=document.createElement("p");h.className="ktd-kalmenu__h";h.textContent="Alle Wettkämpfe im eigenen Kalender, aktualisiert sich von selbst.";m.appendChild(h);
+    document.body.appendChild(m);var r=b.getBoundingClientRect(),mw=m.offsetWidth,mh=m.offsetHeight;
+    var x=Math.min(Math.max(8,r.left),window.innerWidth-mw-8),y=r.bottom+8;if(y+mh>window.innerHeight-8)y=Math.max(8,r.top-mh-8);
+    m.style.left=x+"px";m.style.top=y+"px";KM=m;KM.__b=b;a1.focus({preventScroll:true})}
+  document.addEventListener("click",function(ev){var b=ev.target.closest&&ev.target.closest("[data-ktd-abo]");if(!b)return;ev.preventDefault();ev.stopPropagation();if(KM&&KM.__b===b){kalZu();return}aboAuf(b)},true);
+
   function start(){
     einblenden(document);
     document.querySelectorAll(".ktd-stapel").forEach(stapel);
@@ -143,5 +158,5 @@
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
 
   /* Für nachgeladene Inhalte, z. B. Register mit neuen Karten */
-  window.ktd={einblenden:einblenden,version:"0.3.0"};
+  window.ktd={einblenden:einblenden,version:"0.3.1"};
 })();

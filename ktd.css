@@ -1,6 +1,6 @@
 /* =====================================================================
    Kunstturnen Deutschland · zentrale Gestaltung
-   Datei: ktd.css · Version 0.3.0 · Stand 28.09.2026
+   Datei: ktd.css · Version 0.3.1 · Stand 28.09.2026
    Grundsatz: Diese Datei setzt KEINE globalen Stile (kein body, kein h1).
    Alles wirkt nur über Klassen mit dem Präfix "ktd-". Wird sie in den
    Site-Kopf eingebunden, verändert sich an bestehenden Seiten nichts.
@@ -170,6 +170,11 @@ a.ktd-bento:hover{border-color:var(--ktd-pink)}
 .ktd-kalmenu__k{margin:4px 10px 8px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ktd-gruen)}
 .ktd-kalmenu__a{display:block;padding:11px 12px;border-radius:10px;color:#fff;text-decoration:none;font-weight:500;font-size:15px}
 .ktd-kalmenu__a:hover,.ktd-kalmenu__a:focus-visible{background:rgba(255,255,255,.1);outline:none}
+.ktd-kalmenu__h{margin:8px 12px 4px;font-size:12px;line-height:1.4;color:var(--ktd-hell,#E7DEF6);opacity:.8;max-width:230px}
+.ktd-abo-knopf{display:inline-flex;align-items:center;gap:9px;font:700 .82rem/1 var(--ktd-b);letter-spacing:.08em;text-transform:uppercase;padding:12px 20px;border-radius:999px;border:0;background:var(--ktd-vio);color:#fff;cursor:pointer;transition:background .2s}
+.ktd-abo-knopf svg{width:17px;height:17px}
+.ktd-abo-knopf:hover{background:var(--ktd-pink)}
+.ktd-abo-knopf:focus-visible{outline:3px solid var(--ktd-pink);outline-offset:3px}
 
 /* ---------- 12  Weniger Bewegung ---------- */
 @media (prefers-reduced-motion:reduce){
