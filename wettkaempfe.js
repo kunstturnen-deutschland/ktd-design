@@ -135,6 +135,10 @@
   document.addEventListener("click",function(ev){if(offen>=0&&!box.contains(ev.target))schliesse()});
   document.addEventListener("keydown",function(ev){if(ev.key==="Escape")schliesse()});
 
+  /* ===== Runterzählpillen in "Demnächst" (data-bis, data-ende) ===== */
+  document.querySelectorAll("[data-bis]").forEach(function(p){var n=tage(p.getAttribute("data-bis")),e=p.getAttribute("data-ende");
+    p.textContent=n>1?"In "+n+" Tagen":n===1?"Morgen":n===0?"Heute":(e&&tage(e)>=0)?"Läuft gerade":"Gelaufen"});
+
   /* ===== WM-Zähler ===== */
   var w=tage("2026-10-17"),Z=document.getElementById("zaehler");
   if(w>0)document.getElementById("wm-tage").textContent=w;
