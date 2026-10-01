@@ -250,7 +250,7 @@
 @media (prefers-reduced-motion:reduce){.wk .karte__in,.wk .register{transition:none}}
 /* 0.1.1: Überschrift der WM-Sektion über dem Mosaik, Datums-Kachel an ihrer Stelle */
 .wk .wm-kopf{margin:0 0 26px}
-.wk .wm-kopf h2{color:var(--vio);font-size:clamp(2.2rem,5.4vw,4.2rem);line-height:.98}
+.wk .wm-kopf h1,.wk .wm-kopf h2{color:var(--vio);font-size:clamp(2.2rem,5.4vw,4.2rem);line-height:.98}
 .wk .t--datum{grid-column:8/13;grid-row:1;background:var(--vio);display:flex;flex-direction:column;justify-content:flex-end}
 .wk .t--datum b{font-family:var(--h);font-weight:400;text-transform:uppercase;color:var(--gold);font-size:clamp(2rem,4vw,3.2rem);line-height:.95}
 .wk .t--datum p{margin:.6em 0 0;color:var(--ged);font-weight:500}

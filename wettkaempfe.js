@@ -17,6 +17,8 @@
   function beobachte(root){root.querySelectorAll(".karte").forEach(function(k){if(io)io.observe(k);else k.classList.add("in")})}
 
   /* ===== Zeitleiste: klickbar, Punkte ziehbar, federn zurück ===== */
+  /* Eigener Block: Fehlt die Zeitleiste auf einer Seite (#leiste, #pop), laufen Zähler, Karten und Kalender trotzdem. */
+  (function(){
   var NS="http://www.w3.org/2000/svg",W=1200,H=318,P=34,Y=190;
   /* Die Zeitleiste setzt sich selbst zusammen: von fünf Tagen zurück bis zehn Wochen voraus, aus #wk-daten-termine.
      Je Termin: [start, ende, name, ort, kat, typ, gold, link, kurzname, kurzort] */
@@ -28,10 +30,6 @@
   function X(dt){return P+(dt-L0)/(L1-L0)*(W-2*P)}
   function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
   var MON=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
-  function spanne(a,b){var x=d(a),y=d(b),dd=function(n){return("0"+n).slice(-2)};
-    if(a===b)return dd(x.getDate())+"."+dd(x.getMonth()+1)+".";
-    if(x.getMonth()===y.getMonth())return dd(x.getDate())+"./"+dd(y.getDate())+"."+dd(x.getMonth()+1)+".";
-    return dd(x.getDate())+"."+dd(x.getMonth()+1)+".–"+dd(y.getDate())+"."+dd(y.getMonth()+1)+"."}
   function lang(a,b){var x=d(a),y=d(b),o={day:"numeric",month:"long"};return a===b?x.toLocaleDateString("de-DE",o):x.toLocaleDateString("de-DE",o)+" bis "+y.toLocaleDateString("de-DE",o)}
   var RAND=new Date(L1.getTime()-7*864e5);
   var EV=TL.filter(function(e){return d(e[1])>=L0&&d(e[0])<=RAND&&d(e[1])>=heute}).sort(function(p,q){return p[0]<q[0]?-1:p[0]>q[0]?1:0}).map(function(e){
@@ -134,6 +132,7 @@
   function schliesse(){pop.classList.remove("da");EV.forEach(function(x){x.g.classList.remove("offen")});offen=-1}
   document.addEventListener("click",function(ev){if(offen>=0&&!box.contains(ev.target))schliesse()});
   document.addEventListener("keydown",function(ev){if(ev.key==="Escape")schliesse()});
+  })();
 
   /* ===== Runterzählpillen in "Demnächst" (data-bis, data-ende) ===== */
   document.querySelectorAll("[data-bis]").forEach(function(p){var n=tage(p.getAttribute("data-bis")),e=p.getAttribute("data-ende");
@@ -169,6 +168,7 @@
   var KALI="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' aria-hidden='true'><rect x='3.5' y='5' width='17' height='15.5' rx='3'/><path d='M3.5 10h17M8 3v4M16 3v4M12 13.2v4.6M9.7 15.5h4.6'/></svg>";
   function kalKnopf(titel,start,ende,ort,url,cls){return "<button type='button' class='ktd-kal-knopf"+(cls?" "+cls:"")+"' data-ktd-kal data-titel='"+String(titel).replace(/'/g,"&#39;")+"' data-start='"+start+"' data-ende='"+(ende||"")+"' data-ort='"+String(ort||"").replace(/'/g,"&#39;")+"' data-url='"+(url||"/wettkaempfe")+"' aria-label='"+String(titel).replace(/'/g,"&#39;")+" in den Kalender eintragen'>"+KALI+"</button>"}
   function liste(){
+    if(!LI)return;
     var zz=T.filter(function(e){var v=d(e[1])<heute;
       if(tab==="vorbei"){if(!v)return false}else{if(v||e[0].slice(0,4)!==tab)return false}
       return filt==="alle"||(filt==="nat"?e[4]!=="int":e[4]===filt)}).sort(function(a,b){return tab==="vorbei"?(a[0]<b[0]?1:-1):(a[0]<b[0]?-1:1)});
