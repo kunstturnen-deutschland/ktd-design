@@ -62,3 +62,5 @@ body:has(#ktd-home) .kdf-w{width:100%;max-width:none;padding-inline:clamp(22px,5
 body:has(#ktd-home) .kdf-nl{width:100%;max-width:none}
 #ktd-home .phone{bottom:-165px}
 @media(max-width:680px){body:has(#ktd-home) .kdf-w{padding-top:200px}#ktd-home .phone{bottom:-165px}}
+
+body:has(#ktd-home) .kdf::after{background:#1C0040}body:has(#ktd-home) .kdf{padding-inline:0}
