@@ -48,3 +48,9 @@
 }
 .kdf{position:relative}.kdf-w{padding-top:65px}.kdf-nl{max-width:60%}@media(max-width:680px){.kdf-w{padding-top:130px}.kdf-nl{max-width:100%}}
 #ktd-home .hero h1,#ktd-home .wm-title,#ktd-home .calendar h2{color:#2D0060}
+
+#ktd-home .hero-sub,#ktd-home .hero-sub strong,#ktd-home .wm-countdown,#ktd-home .wm-countdown strong,#ktd-home .wm-countdown small{color:#2D0060}
+#ktd-home .calendar-note{font-size:20px!important}
+body:has(#ktd-home) footer.footer8_component,body:has(#ktd-home) .kdf,body:has(#ktd-home) .kdf-w,body:has(#ktd-home) .kdf-nl{background:#1C0040;color:#E7DEF6}
+body:has(#ktd-home) .kdf-nl p,body:has(#ktd-home) .kdf-nl a,body:has(#ktd-home) .kdf-nl h2{color:#E7DEF6}
+@media(max-width:680px){#ktd-home .calendar-note{font-size:18px!important}}
