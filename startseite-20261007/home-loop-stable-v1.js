@@ -64,12 +64,31 @@
       ready=true;scheduleNormalize();
     }
     for(const type of ['pointerdown','wheel','keydown'])rail.addEventListener(type,()=>{touched=true},{passive:true});
-    function hold(){contact=true;clearTimeout(settleTimer);}
-    function release(){if(!contact)return;contact=false;scheduleNormalize();}
-    rail.addEventListener('pointerdown',hold,{passive:true});
-    rail.addEventListener('touchstart',hold,{passive:true});
-    for(const type of ['pointerup','pointercancel','touchend','touchcancel'])
-      window.addEventListener(type,release,{passive:true});
+    let pointerContact=false,touchContacts=0;
+    function syncContact(){contact=pointerContact||touchContacts>0;}
+    function begin(){
+      touched=true;
+      // A new gesture stops the preceding momentum. Make room before it starts,
+      // even when successive swipes leave no time for the idle timer.
+      if(!contact)normalize();
+      clearTimeout(settleTimer);
+    }
+    function pointerStart(){begin();pointerContact=true;syncContact();}
+    function touchStart(event){begin();touchContacts=event.touches.length;syncContact();}
+    function pointerEnd(){pointerContact=false;syncContact();scheduleNormalize();}
+    function touchEnd(event){
+      touchContacts=event.touches.length;
+      if(!touchContacts)pointerContact=false;
+      syncContact();scheduleNormalize();
+    }
+    // Card/overlay handlers may stop bubbling. Track the gesture in capture
+    // phase, and keep touch contact active after Safari's pointercancel.
+    rail.addEventListener('pointerdown',pointerStart,{passive:true,capture:true});
+    rail.addEventListener('touchstart',touchStart,{passive:true,capture:true});
+    for(const type of ['pointerup','pointercancel'])
+      window.addEventListener(type,pointerEnd,{passive:true,capture:true});
+    for(const type of ['touchend','touchcancel'])
+      window.addEventListener(type,touchEnd,{passive:true,capture:true});
     rail.addEventListener('scroll',scheduleNormalize,{passive:true});
     rail.addEventListener('scrollend',scheduleNormalize,{passive:true});
     requestAnimationFrame(()=>requestAnimationFrame(measure));
