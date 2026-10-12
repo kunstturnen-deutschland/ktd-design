@@ -8,16 +8,6 @@
     rail.dataset.homeLoopReady='true';
     const last=cards[cards.length-1],lead=cards.find(c=>c.dataset.athleteId==='turnerin-6aafa5a2f97f052a1e2d04e0')||cards[0];
     let touched=false,step=0,adjusting=false,ready=false,contact=false,settleTimer=0;
-    const navigation=performance.getEntriesByType('navigation')[0];
-    let enterAtCards=!location.hash&&navigation?.type!=='back_forward';
-    function cancelEntry(){enterAtCards=false;}
-    for(const type of ['pointerdown','wheel','keydown'])window.addEventListener(type,cancelEntry,{once:true,passive:true});
-    function enterCards(){
-      if(!enterAtCards)return;
-      enterAtCards=false;
-      const heading=rail.closest('.hero')?.querySelector('.applaus')||rail;
-      window.scrollTo({top:Math.max(0,heading.getBoundingClientRect().top+window.scrollY-24),behavior:'instant'});
-    }
     function move(card,before){
       const focus=document.activeElement;
       if(before)rail.prepend(card);else rail.append(card);
@@ -92,7 +82,7 @@
     rail.addEventListener('scroll',scheduleNormalize,{passive:true});
     rail.addEventListener('scrollend',scheduleNormalize,{passive:true});
     requestAnimationFrame(()=>requestAnimationFrame(measure));
-    document.fonts.ready.then(()=>{measure();requestAnimationFrame(enterCards);});
+    document.fonts.ready.then(measure);
     new ResizeObserver(measure).observe(rail);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
