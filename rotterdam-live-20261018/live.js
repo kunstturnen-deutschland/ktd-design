@@ -91,13 +91,13 @@
   #ktd-live-rotterdam .lr-status{font-size:12px;color:var(--lr-light);margin:18px 0 0;min-height:18px}
   @media(max-width:900px){#ktd-live-rotterdam .lr-layout{grid-template-columns:1fr}#ktd-live-rotterdam .lr-scores{grid-row:1}#ktd-live-rotterdam .lr-wrap{padding-block:32px}#ktd-live-rotterdam .lr-person{grid-template-columns:58px minmax(0,1fr);gap:12px}#ktd-live-rotterdam .lr-person-photo img{width:58px;height:75px}#ktd-live-rotterdam .lr-scores{padding:20px}#ktd-live-rotterdam dd{font-size:18px}}
   `;document.head.append(style);
-  let host,hash='',pending=null,shown=5,busy=false;const readerAtHome=!!document.querySelector('#ktd-home');
+  let host,hash='',pending=null,shown=5,busy=false,testMeta=null;const readerAtHome=!!document.querySelector('#ktd-home');
   function scoreLine(score){const n=el('div','lr-scoreline');n.append(el('span','',score.name+' · '+score.device),el('strong','',score.value.toFixed(3)));if(score.detail)n.append(el('small','',score.detail));return n;}
   function render(data){
     if(!host){host=el('section');host.id='ktd-live-rotterdam';host.setAttribute('aria-labelledby','lr-title');if(readerAtHome)root.prepend(host);else{const hero=root.querySelector('.hero');if(hero)hero.after(host);else root.prepend(host);}}
     const focusKey=document.activeElement?.closest('#ktd-live-rotterdam')?.dataset.action;
     host.replaceChildren();
-    const header=el('div','lr-wrap');const head=el('div','lr-head');const title=el('div');title.append(el('p','lr-kicker','18. Oktober 2026 · Aus unserer Turnfamilie'));const h=el('h2','','Mittendrin in Rotterdam');h.id='lr-title';title.append(h);head.append(title,el('span','lr-badge','Aus der Halle'));header.append(head);host.append(header);
+    const header=el('div','lr-wrap');const head=el('div','lr-head');const title=el('div');title.append(el('p','lr-kicker','18. Oktober 2026 · Aus unserer Turnfamilie'));const h=el('h2','',testMeta?.title||'Mittendrin in Rotterdam');h.id='lr-title';title.append(h);head.append(title,el('span','lr-badge',testMeta?.badge||'Aus der Halle'));header.append(head);host.append(header);
     if(data.hero){const f=el('figure','lr-hero');const img=el('img');img.src=data.hero.src;img.alt=data.hero.alt;img.decoding='async';f.append(img);if(data.hero.caption)f.append(el('figcaption','',data.hero.caption));host.append(f);}
     const wrap=el('div','lr-wrap lr-layout');const news=el('div');news.append(el('h3','','Unser Hallenticker'));const list=el('ol','lr-stream');
     for(const [index,entry] of data.entries.entries()){
@@ -117,6 +117,8 @@
   async function update(){
     if(busy||document.hidden)return;busy=true;
     try{
+      const temporary=document.querySelector('#ktd-live-test-data');
+      if(temporary){testMeta=JSON.parse(temporary.textContent);const html=testMeta.article;const data=parse(html);if(data&&!host)render(data);return;}
       const response=await fetch(source+'?live='+Math.floor(Date.now()/30000),{cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(15000)});
       if(response.status===404){host?.remove();host=null;hash='';pending=null;return;}
       if(!response.ok)throw Error('Feed unavailable');const html=await response.text();const data=parse(html);if(!data)return;
