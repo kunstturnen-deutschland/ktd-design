@@ -11,10 +11,20 @@ const num=n=>Number.isFinite(Number(n))?Number(n).toLocaleString('de-DE',{minimu
 function read(){try{const c=JSON.parse(sessionStorage.getItem(key));return c&&Date.now()-c.saved<7200000&&c.path==='/wettkampf/wm-rotterdam-2026'?c:null;}catch{return null;}}
 function write(c){try{sessionStorage.setItem(key,JSON.stringify(c));return true;}catch{return false;}}
 const style=document.createElement('style');style.textContent=`
-#ktd-rotterdam .de-table button.rp-name{display:inline-flex;align-items:center;gap:8px;border:0!important;border-radius:0!important;padding:3px 0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;color:inherit!important;font:inherit!important;font-weight:700!important;text-align:left;cursor:pointer;min-height:36px!important;width:auto!important}#ktd-rotterdam .de-table button.rp-name:after{content:'';display:inline-block;flex:0 0 auto;width:6px;height:6px;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:rotate(-45deg);margin-right:3px}.rp-name:focus-visible,.rp-return:focus-visible,.rp-latest a:focus-visible{outline:3px solid #e040aa;outline-offset:5px}
+#ktd-rotterdam .de-table button.rp-name{display:inline-flex;align-items:center;gap:8px;border:0!important;border-radius:0!important;padding:3px 0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;color:inherit!important;font:inherit!important;font-weight:700!important;text-align:left;cursor:pointer;min-height:36px!important;width:auto!important}#ktd-rotterdam .de-table button.rp-name:after{content:'';display:inline-block;flex:0 0 auto;width:6px;height:6px;border:solid currentColor;border-width:0 2.5px 2.5px 0;transform:rotate(-45deg);margin-right:3px}.rp-name:focus-visible,.rp-return:focus-visible,.rp-latest a:focus-visible{outline:3px solid #e040aa;outline-offset:5px}
 .rp-dialog{box-sizing:border-box;width:min(420px,calc(100% - 32px));border:0;border-radius:24px;padding:26px;background:#e7def6;color:#2d0060;font:16px/1.5 Roboto,Arial,sans-serif}.rp-dialog::backdrop{background:#1c004099}.rp-dialog h2{font:400 28px/1.1 'Lilita One',sans-serif;margin:12px 0 22px;color:inherit}.rp-dialog a{display:block;padding:15px 20px;border-radius:30px;background:#2d0060;color:white;font-weight:700;text-decoration:none}.rp-dialog button{display:block;margin:18px 0 0;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}.rp-dialog a:focus-visible,.rp-dialog button:focus-visible{outline:3px solid #e040aa;outline-offset:4px}
 #ktd-portrait .rp-return{display:inline-block;color:inherit;text-decoration:underline;text-underline-offset:4px;font:700 15px/1.5 Roboto,Arial,sans-serif;margin:0 0 22px;padding:8px 0}
 #ktd-portrait .rp-latest{background:#76f637;color:#2d0060;border-radius:24px;padding:clamp(22px,4vw,36px);margin:30px 0 0;font-family:Roboto,Arial,sans-serif}#ktd-portrait .rp-latest h2{font:400 clamp(26px,4vw,36px)/1.1 'Lilita One',sans-serif;color:inherit;margin:0 0 12px}#ktd-portrait .rp-latest p{color:inherit;margin:8px 0;font-size:15px;line-height:1.5}#ktd-portrait .rp-latest h3{font:700 19px/1.4 Roboto,Arial,sans-serif;color:inherit;margin:0}#ktd-portrait .rp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}#ktd-portrait .rp-score{padding:16px;border:1px solid #2d006044;border-radius:16px}#ktd-portrait .rp-score span{display:block;font-size:13px}#ktd-portrait .rp-score strong{display:block;font:400 32px/1.2 'Lilita One',sans-serif;margin:5px 0}#ktd-portrait .rp-score small{font-size:12px}#ktd-portrait .rp-latest a{display:inline-block;color:#fff;background:#2d0060;padding:13px 20px;border-radius:30px;text-decoration:none;font-weight:700;font-size:14px}#ktd-portrait .rp-note{font-size:12px!important}
+
+@media(max-width:600px){
+#ktd-rotterdam .de-table[data-rp-fit]{table-layout:fixed!important;min-width:0!important;width:var(--rp-table-width)!important}
+#ktd-rotterdam .de-table[data-rp-fit] col{width:90px}
+#ktd-rotterdam .de-table[data-rp-fit] col:first-child{width:54px}
+#ktd-rotterdam .de-table[data-rp-fit] col:nth-child(2){width:var(--rp-name-width)}
+#ktd-rotterdam .de-table[data-rp-fit] col:nth-child(3){width:58px}
+#ktd-rotterdam .de-table[data-rp-fit] .de-name,#ktd-rotterdam .de-table[data-rp-fit] thead th:nth-child(2){box-sizing:border-box;min-width:0!important;max-width:none!important;width:var(--rp-name-width)!important;padding-left:10px!important;padding-right:10px!important;overflow-wrap:anywhere}
+#ktd-rotterdam .de-table button.rp-name{max-width:100%;white-space:normal}
+}
 `;document.head.append(style);
 const phases={qualifikation:'Qualifikation',teamfinale:'Teamfinale',mehrkampffinale:'Mehrkampffinale',geraetefinale:'Gerätefinale',wettkampftag:'Wettkampftag'};
 const devices={sprung:'Sprung',stufenbarren:'Barren',schwebebalken:'Balken',boden:'Boden',mehrkampf:'Mehrkampf',vault:'Sprung · zwei Sprünge',bars:'Barren',beam:'Balken',floor:'Boden',allaround:'Mehrkampf'};
@@ -56,13 +66,34 @@ let liveData=null;
 function restore(section){const ctx=read();if(restored||!ctx?.visited)return;const button=[...section.querySelectorAll('.de-category')].find(b=>b.textContent===ctx.category);if(!button)return;restored=true;
  button.click();const filter=section.querySelector('.de-filter');if(filter&&!filter.hidden&&(filter.getAttribute('aria-pressed')==='true')!==ctx.filter)filter.click();
  requestAnimationFrame(()=>requestAnimationFrame(()=>{section.querySelectorAll('.de-scroll').forEach((s,i)=>s.scrollLeft=ctx.left[i]||0);window.scrollTo({top:ctx.scrollY,behavior:'instant'});[...section.querySelectorAll('.rp-name')].find(b=>b.textContent===ctx.name)?.focus({preventScroll:true});ctx.visited=false;write(ctx);}));}
+
+/* Mobile opens at the total; the sticky name column uses only the space its names need. */
+const measureContext=document.createElement('canvas').getContext('2d');
+function fitTables(section){
+ section.querySelectorAll('.de-team-mark').forEach(mark=>{if(mark.textContent.trim()==='Unser Team')mark.remove();});
+ for(const table of section.querySelectorAll('.de-table')){
+  const scroller=table.closest('.de-scroll'),cells=[...table.querySelectorAll('.de-name')];if(!scroller||!cells.length)continue;
+  const initial=!table.dataset.rpFit,atRight=scroller.scrollWidth-scroller.clientWidth-scroller.scrollLeft<3;
+  let longest=0;
+  for(const cell of cells){const name=cell.querySelector('.rp-name');const text=name?.textContent||[...cell.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join('').trim();
+   if(measureContext){const cs=getComputedStyle(cell);measureContext.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;longest=Math.max(longest,measureContext.measureText(text).width+(name?17:0));}
+  }
+  const mobile=matchMedia('(max-width:600px)').matches,width=Math.ceil(Math.min(Math.max(110,longest+20),Math.max(110,scroller.clientWidth-100)));
+  const count=table.querySelector('thead tr')?.children.length||8;
+  table.style.setProperty('--rp-name-width',width+'px');table.style.setProperty('--rp-table-width',(width+54+58+90*(count-3))+'px');
+  if(initial){const group=document.createElement('colgroup');group.dataset.rpColumns='';for(let i=0;i<count;i++)group.append(document.createElement('col'));table.prepend(group);table.dataset.rpFit='true';}
+  if(mobile&&(initial||atRight))scroller.scrollLeft=scroller.scrollWidth;
+ }
+}
+
 function scan(){queued=false;if(slug){const root=document.getElementById('ktd-portrait');if(root)portrait(root);return;}
  const section=document.getElementById('rotterdam-tagesabschluss');if(!section)return;
  for(const cell of section.querySelectorAll('.de-name')){if(cell.querySelector('.rp-name'))continue;const raw=[...cell.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join('').trim();const person=directory.get(ident(raw));if(!person)continue;
  const textNodes=[...cell.childNodes].filter(n=>n.nodeType===3);textNodes.forEach(n=>n.remove());const b=document.createElement('button');b.type='button';b.className='rp-name';b.textContent=raw;b.setAttribute('aria-label','Porträt von '+person.name+' öffnen');b.addEventListener('click',()=>openProfile(b,person));cell.prepend(b);
- }restore(section);if(!liveData)liveSnapshot().then(d=>{liveData=d;});}
+ }fitTables(section);restore(section);if(!liveData)liveSnapshot().then(d=>{liveData=d;});}
 function schedule(){if(!queued){queued=true;requestAnimationFrame(scan);}}
 new MutationObserver(records=>{if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&!n.matches?.('.rp-name,.rp-return,.rp-latest,.rp-dialog')&&!n.closest?.('.rp-latest,.rp-dialog'))))schedule();}).observe(document.body,{childList:true,subtree:true});
 window.addEventListener('pageshow',e=>{if(e.persisted){restored=false;schedule();}});
+window.addEventListener('resize',schedule);document.fonts?.ready.then(schedule);
 if(isResults)loadDirectory();scan();
 })();
