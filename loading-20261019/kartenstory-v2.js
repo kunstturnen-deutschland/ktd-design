@@ -524,7 +524,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (()=>{
   const path=location.pathname.replace(/\/$/,'')||'/';
   if(path!=='/'&&path!=='/wettkampf/wm-rotterdam-2026')return;
-  const source='https://cdn.jsdelivr.net/gh/kunstturnen-deutschland/ktd-design@4d1ccffbf9b2249b1cfd8032f7778f41153a2410/rotterdam-live-20261019/wm-gold-release.js?v=20261019-2141';
+  const source='https://cdn.jsdelivr.net/gh/kunstturnen-deutschland/ktd-design@265385f0344a0f5228ca479c0db6b386e1477d15/rotterdam-live-20261019/wm-gold-release.js?v=20261019-2240';
 
   // Own team photograph: retain the caption, never display the supplier credit.
   // Keep this at the shared renderer boundary so future live-result updates remain live.
