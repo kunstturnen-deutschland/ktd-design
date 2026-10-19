@@ -1,0 +1,15 @@
+/* Only protect views that are actually replaced. Without JS, native HTML stays visible. */
+html[data-ktd-view-loading="home"] #ktd-home,
+html[data-ktd-view-loading="home"] #ktd-jesenja-news,
+html[data-ktd-view-loading="wm"] #ktd-rotterdam,
+html[data-ktd-view-loading="portrait"] :is(.kp-lauf,.kp-hero,.kp-gross,.kp-erf,.kp-wert,.kp-gal,#ktd-portrait),
+html[data-ktd-view-loading="stars"] .st{visibility:hidden!important}
+html[data-ktd-view-loading] body::after{content:"Die Seite wird geladen …";position:fixed;top:180px;left:20px;right:20px;z-index:10020;text-align:center;font:400 17px/1.5 Roboto,Arial,sans-serif;color:#fff;pointer-events:none}
+html[data-ktd-view-loading="wm"] body::after{color:#2D0060}
+html[data-ktd-view-loading="wm"] body{background:#E3B341}
+html[data-ktd-view-slow] body::after{display:none}
+#ktd-view-fallback{position:fixed;z-index:10030;top:150px;left:50%;transform:translateX(-50%);width:min(440px,calc(100% - 40px));box-sizing:border-box;padding:24px;border-radius:20px;background:#E7DEF6;color:#2D0060;text-align:center;font:400 17px/1.5 Roboto,Arial,sans-serif;box-shadow:0 8px 32px #1C004033}
+#ktd-view-fallback p{color:inherit;margin:0 0 16px}
+#ktd-view-fallback button{display:block;width:100%;min-height:44px;margin-top:10px;padding:12px 18px;border:1px solid #2D0060;border-radius:30px;background:#2D0060;color:#fff;font:700 15px/1.4 Roboto,Arial,sans-serif;cursor:pointer}
+#ktd-view-fallback button+button{background:transparent;color:#2D0060}
+#ktd-view-fallback button:focus-visible{outline:3px solid #E040AA;outline-offset:4px}
