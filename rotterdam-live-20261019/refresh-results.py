@@ -60,11 +60,27 @@ for key,old in base['tables'].items():
     expected=8 if key in ['team','allaround'] else 7
     assert all(len(r)==expected for r in data),(key,[r for r in data if len(r)!=expected][:2])
     tables[key]={'source':old['source'],'rows':data}
+teamMembers=[]
+currentNoc=None
+for row in html.fromstring(Path('team.html').read_bytes()).xpath('//tr'):
+    if row.get('class')=='team':
+        currentNoc=cell(row,'noc')[0].xpath('.//img/@alt')[0]
+    elif 'member' in (row.get('class') or '').split():
+        raw=text(cell(row,'name')[0])
+        name=names.get(norm(raw))
+        if not name:
+            parts=raw.split()
+            split=next((i for i,p in enumerate(parts) if not p.isupper()),len(parts))
+            name=' '.join(parts[split:]+[p.title() for p in parts[:split]])
+        values=[value(c) for c in cell(row,'score')]
+        assert len(values)==4
+        teamMembers.append({'name':name,'noc':currentNoc,'values':values})
+
 now=datetime.fromisoformat(args.checked_at)
 assert now.tzinfo is not None
 now=now.astimezone(ZoneInfo('Europe/Amsterdam'))
 status=f'Zwischenstand der laufenden Frauenqualifikation. Geprüft am 19.10.2026 um {now:%H:%M} Uhr. Alle Platzierungen sind vorläufig; die Qualifikation endet heute voraussichtlich gegen 22:30 Uhr.'
-updated={'completed':args.completed,'status':status,'date':'2026-10-19','checkedAt':now.isoformat(),'tables':tables}
+updated={'completed':args.completed,'status':status,'date':'2026-10-19','checkedAt':now.isoformat(),'tables':tables,'teamMembers':teamMembers}
 replacements=[]
 for m in re.finditer(r'const data=',source):
     try:d,end=decoder.raw_decode(source[m.end():])
