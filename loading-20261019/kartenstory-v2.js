@@ -525,6 +525,22 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const path=location.pathname.replace(/\/$/,'')||'/';
   if(path!=='/'&&path!=='/wettkampf/wm-rotterdam-2026')return;
   const source='https://ktd-spiegel.vercel.app/rotterdam/wm-gold-release.js?v=20261019-single-loader';
+
+  // Own team photograph: retain the caption, never display the supplier credit.
+  // Keep this at the shared renderer boundary so future live-result updates remain live.
+  const ownPhoto='6ad5c594d8ebf4fd9a049342_';
+  function cleanOwnCaption(){
+    document.querySelectorAll('#ktd-home-wm figure, #ktd-rotterdam figure').forEach(figure=>{
+      const img=figure.querySelector('img'),caption=figure.querySelector('figcaption');
+      if(!img||!caption||!(img.getAttribute('src')||'').includes(ownPhoto))return;
+      const text=caption.textContent;
+      const clean=text.replace(/\s*Bereitgestellt von Matthias (?:Wellmer|Wämer)\.?/gi,'').trim();
+      if(clean!==text)caption.textContent=clean;
+    });
+  }
+  cleanOwnCaption();
+  new MutationObserver(cleanOwnCaption).observe(document.body,{childList:true,subtree:true,characterData:true});
+
   let observer;
   function load(){
     if(path!=='/'&&!document.querySelector('#ktd-rotterdam[data-wm-live-design]'))return;
